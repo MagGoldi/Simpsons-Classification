@@ -33,9 +33,9 @@ env/
 Thumbs.db
 
 # Reports (keep structure, ignore generated content)
-reports/*.png
-reports/*.jpg
-reports/*.csv
+data/*.png
+data/*.jpg
+data/*.csv
 
 #logs
 *.log
