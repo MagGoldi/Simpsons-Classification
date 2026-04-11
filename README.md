@@ -2,6 +2,12 @@
 
 > **Actual Public Score: `0.94580`**
 
+<p align="center">
+  <img src="reports/eval_predictions_grid.png" alt="Simpsons Model Predictions" width="800">
+  <br>
+  <i>Sample model predictions with confidence scores on the validation set</i>
+</p>
+
 Image classification pipeline for the [Journey to Springfield](https://www.kaggle.com/competitions/journey-springfield) Kaggle competition — 42-class character recognition from *The Simpsons* using a custom CNN with MLflow experiment tracking.
 
 ## Project Structure
