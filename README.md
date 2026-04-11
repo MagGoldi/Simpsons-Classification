@@ -8,7 +8,7 @@
   <i>Sample model predictions with confidence scores on the validation set</i>
 </p>
 
-Image classification pipeline for the [Journey to Springfield](https://www.kaggle.com/competitions/journey-springfield) Kaggle competition — 42-class character recognition from *The Simpsons* using a custom CNN with MLflow experiment tracking.
+Image classification pipeline for the [Journey to Springfield](https://www.kaggle.com/competitions/journey-to-springfield1) Kaggle competition — 42-class character recognition from *The Simpsons* using a custom CNN with MLflow experiment tracking.
 
 ## Project Structure
 
