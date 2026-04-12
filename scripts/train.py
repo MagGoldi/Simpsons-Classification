@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 
 import config
 from src.dataset import create_dataloaders, SimpsonsDataset
-from src.models import SimpleCnn
+from src.models import SimpleCnn, SimpsonResNet
 from src.trainer import train_loop
 from src.utils import load_files, get_label_encoder
 from src.visualization import generate_eda_reports, generate_post_training_reports
@@ -29,18 +29,19 @@ def main():
     logger.info(f"Label encoder saved to {le_path}")
 
     train_files, val_files = train_test_split(
-        train_val_files, test_size=0.25, stratify=train_val_labels
+        train_val_files, test_size=config.VAL_SIZE, stratify=train_val_labels
     )
 
-    loaders = create_dataloaders(train_files, val_files, label_encoder, balanced=False)
+    loaders, train_dataset, val_dataset = create_dataloaders(train_files, val_files, label_encoder, balanced=False)
 
     generate_eda_reports(
-        train_files, val_files, label_encoder,
+        train_dataset, val_dataset, label_encoder,
         output_dir=str(config.REPORTS_DIR),
     )
 
-    model = SimpleCnn(n_classes=len(label_encoder.classes_)).to(config.DEVICE)
-    optimizer = optim.Adam(
+    model = SimpsonResNet(n_classes=len(label_encoder.classes_)).to(config.DEVICE)
+    model.freeze_backbone()
+    optimizer = optim.AdamW(
         model.parameters(), lr=config.LEARNING_RATE, weight_decay=config.WEIGHT_DECAY
     )
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=3)
@@ -55,8 +56,25 @@ def main():
         loss_func=criterion,
         max_epochs=config.MAX_EPOCHS,
         device=config.DEVICE,
-        experiment_name="simple_cnn_unbalanced",
+        experiment_name="simple_cnn_frozen",
     )
+
+    if config.FINE_TUNING == True:
+        model.unfreeze_backbone()
+        optimizer = torch.optim.AdamW(model.parameters(), lr=1e-5)
+        result = train_loop(
+            model=model,
+            train_loader=loaders["train"],
+            val_loader=loaders["val"],
+            optimizer=optimizer,
+            scheduler=scheduler,
+            loss_func=criterion,
+            max_epochs=config.MAX_EPOCHS,
+            device=config.DEVICE,
+            experiment_name="simple_cnn_fine_tuning",
+        )
+
+    
 
     logger.info("Generating post-training reports")
     val_dataset_vis = SimpsonsDataset(val_files, label_encoder=label_encoder, mode="val")

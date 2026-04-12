@@ -1,242 +1,242 @@
 {
   "abraham_grampa_simpson": {
-    "precision": 0.9502487562189055,
-    "recall": 0.8377192982456141,
-    "f1-score": 0.8904428904428905,
+    "precision": 0.978448275862069,
+    "recall": 0.9956140350877193,
+    "f1-score": 0.9869565217391304,
     "support": 228.0
   },
   "agnes_skinner": {
-    "precision": 0.6923076923076923,
+    "precision": 1.0,
     "recall": 0.9,
-    "f1-score": 0.782608695652174,
+    "f1-score": 0.9473684210526315,
     "support": 10.0
   },
   "apu_nahasapeemapetilon": {
-    "precision": 0.9798657718120806,
-    "recall": 0.9358974358974359,
-    "f1-score": 0.9573770491803278,
+    "precision": 1.0,
+    "recall": 0.9935897435897436,
+    "f1-score": 0.9967845659163987,
     "support": 156.0
   },
   "barney_gumble": {
-    "precision": 0.7222222222222222,
-    "recall": 0.5,
-    "f1-score": 0.5909090909090909,
+    "precision": 0.9629629629629629,
+    "recall": 1.0,
+    "f1-score": 0.9811320754716981,
     "support": 26.0
   },
   "bart_simpson": {
-    "precision": 0.8548895899053628,
-    "recall": 0.8065476190476191,
-    "f1-score": 0.8300153139356815,
+    "precision": 0.9940652818991098,
+    "recall": 0.9970238095238095,
+    "f1-score": 0.9955423476968797,
     "support": 336.0
   },
   "carl_carlson": {
-    "precision": 0.8076923076923077,
-    "recall": 0.875,
-    "f1-score": 0.84,
+    "precision": 1.0,
+    "recall": 0.9166666666666666,
+    "f1-score": 0.9565217391304348,
     "support": 24.0
   },
   "charles_montgomery_burns": {
-    "precision": 0.8888888888888888,
-    "recall": 0.8590604026845637,
-    "f1-score": 0.8737201365187713,
+    "precision": 0.99,
+    "recall": 0.9966442953020134,
+    "f1-score": 0.9933110367892977,
     "support": 298.0
   },
   "chief_wiggum": {
-    "precision": 0.8838951310861424,
-    "recall": 0.9554655870445344,
-    "f1-score": 0.9182879377431906,
+    "precision": 0.9919028340080972,
+    "recall": 0.9919028340080972,
+    "f1-score": 0.9919028340080972,
     "support": 247.0
   },
   "cletus_spuckler": {
     "precision": 1.0,
-    "recall": 0.75,
-    "f1-score": 0.8571428571428571,
+    "recall": 1.0,
+    "f1-score": 1.0,
     "support": 12.0
   },
   "comic_book_guy": {
-    "precision": 0.8924731182795699,
-    "recall": 0.7094017094017094,
-    "f1-score": 0.7904761904761904,
+    "precision": 0.9914529914529915,
+    "recall": 0.9914529914529915,
+    "f1-score": 0.9914529914529915,
     "support": 117.0
   },
   "disco_stu": {
-    "precision": 0.6666666666666666,
-    "recall": 1.0,
-    "f1-score": 0.8,
-    "support": 2.0
-  },
-  "edna_krabappel": {
-    "precision": 0.84251968503937,
-    "recall": 0.9385964912280702,
-    "f1-score": 0.8879668049792531,
-    "support": 114.0
-  },
-  "fat_tony": {
-    "precision": 0.5,
-    "recall": 1.0,
-    "f1-score": 0.6666666666666666,
-    "support": 7.0
-  },
-  "gil": {
-    "precision": 0.5714285714285714,
-    "recall": 0.5714285714285714,
-    "f1-score": 0.5714285714285714,
-    "support": 7.0
-  },
-  "groundskeeper_willie": {
-    "precision": 0.8620689655172413,
-    "recall": 0.8333333333333334,
-    "f1-score": 0.847457627118644,
-    "support": 30.0
-  },
-  "homer_simpson": {
-    "precision": 0.9319470699432892,
-    "recall": 0.8772241992882562,
-    "f1-score": 0.9037580201649863,
-    "support": 562.0
-  },
-  "kent_brockman": {
-    "precision": 0.9516129032258065,
-    "recall": 0.944,
-    "f1-score": 0.9477911646586346,
-    "support": 125.0
-  },
-  "krusty_the_clown": {
-    "precision": 0.9285714285714286,
-    "recall": 0.9470198675496688,
-    "f1-score": 0.9377049180327869,
-    "support": 302.0
-  },
-  "lenny_leonard": {
-    "precision": 0.8275862068965517,
-    "recall": 0.935064935064935,
-    "f1-score": 0.8780487804878049,
-    "support": 77.0
-  },
-  "lionel_hutz": {
-    "precision": 0.0,
-    "recall": 0.0,
-    "f1-score": 0.0,
-    "support": 1.0
-  },
-  "lisa_simpson": {
-    "precision": 0.7786885245901639,
-    "recall": 0.8407079646017699,
-    "f1-score": 0.8085106382978723,
-    "support": 339.0
-  },
-  "maggie_simpson": {
-    "precision": 0.875,
-    "recall": 0.4375,
-    "f1-score": 0.5833333333333334,
-    "support": 32.0
-  },
-  "marge_simpson": {
-    "precision": 0.9409937888198758,
-    "recall": 0.9380804953560371,
-    "f1-score": 0.9395348837209302,
-    "support": 323.0
-  },
-  "martin_prince": {
     "precision": 1.0,
     "recall": 0.5,
     "f1-score": 0.6666666666666666,
+    "support": 2.0
+  },
+  "edna_krabappel": {
+    "precision": 0.9912280701754386,
+    "recall": 0.9912280701754386,
+    "f1-score": 0.9912280701754386,
+    "support": 114.0
+  },
+  "fat_tony": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 7.0
+  },
+  "gil": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 7.0
+  },
+  "groundskeeper_willie": {
+    "precision": 0.967741935483871,
+    "recall": 1.0,
+    "f1-score": 0.9836065573770492,
+    "support": 30.0
+  },
+  "homer_simpson": {
+    "precision": 0.9875666074600356,
+    "recall": 0.9893238434163701,
+    "f1-score": 0.9884444444444445,
+    "support": 562.0
+  },
+  "kent_brockman": {
+    "precision": 1.0,
+    "recall": 0.992,
+    "f1-score": 0.9959839357429718,
+    "support": 125.0
+  },
+  "krusty_the_clown": {
+    "precision": 0.9966666666666667,
+    "recall": 0.9900662251655629,
+    "f1-score": 0.9933554817275747,
+    "support": 302.0
+  },
+  "lenny_leonard": {
+    "precision": 1.0,
+    "recall": 0.987012987012987,
+    "f1-score": 0.9934640522875817,
+    "support": 77.0
+  },
+  "lionel_hutz": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1.0
+  },
+  "lisa_simpson": {
+    "precision": 0.9940652818991098,
+    "recall": 0.9882005899705014,
+    "f1-score": 0.9911242603550295,
+    "support": 339.0
+  },
+  "maggie_simpson": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 32.0
+  },
+  "marge_simpson": {
+    "precision": 0.9906832298136646,
+    "recall": 0.9876160990712074,
+    "f1-score": 0.9891472868217054,
+    "support": 323.0
+  },
+  "martin_prince": {
+    "precision": 0.8947368421052632,
+    "recall": 0.9444444444444444,
+    "f1-score": 0.918918918918919,
     "support": 18.0
   },
   "mayor_quimby": {
-    "precision": 0.9574468085106383,
-    "recall": 0.7377049180327869,
-    "f1-score": 0.8333333333333334,
+    "precision": 0.9508196721311475,
+    "recall": 0.9508196721311475,
+    "f1-score": 0.9508196721311475,
     "support": 61.0
   },
   "milhouse_van_houten": {
-    "precision": 0.8657718120805369,
-    "recall": 0.9555555555555556,
-    "f1-score": 0.9084507042253521,
+    "precision": 0.9925373134328358,
+    "recall": 0.9851851851851852,
+    "f1-score": 0.9888475836431226,
     "support": 270.0
   },
   "miss_hoover": {
     "precision": 1.0,
-    "recall": 0.5,
-    "f1-score": 0.6666666666666666,
+    "recall": 1.0,
+    "f1-score": 1.0,
     "support": 4.0
   },
   "moe_szyslak": {
-    "precision": 0.9205882352941176,
-    "recall": 0.8622589531680441,
-    "f1-score": 0.8904694167852063,
+    "precision": 0.9836512261580381,
+    "recall": 0.9944903581267218,
+    "f1-score": 0.989041095890411,
     "support": 363.0
   },
   "ned_flanders": {
-    "precision": 0.9421487603305785,
-    "recall": 0.9395604395604396,
-    "f1-score": 0.9408528198074277,
+    "precision": 0.989100817438692,
+    "recall": 0.9972527472527473,
+    "f1-score": 0.9931600547195623,
     "support": 364.0
   },
   "nelson_muntz": {
-    "precision": 0.9452054794520548,
-    "recall": 0.7752808988764045,
-    "f1-score": 0.8518518518518519,
+    "precision": 0.9662921348314607,
+    "recall": 0.9662921348314607,
+    "f1-score": 0.9662921348314607,
     "support": 89.0
   },
   "otto_mann": {
-    "precision": 0.75,
-    "recall": 0.75,
-    "f1-score": 0.75,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
     "support": 8.0
   },
   "patty_bouvier": {
-    "precision": 0.7619047619047619,
-    "recall": 0.8888888888888888,
-    "f1-score": 0.8205128205128205,
+    "precision": 0.9473684210526315,
+    "recall": 1.0,
+    "f1-score": 0.972972972972973,
     "support": 18.0
   },
   "principal_skinner": {
-    "precision": 0.762402088772846,
-    "recall": 0.9765886287625418,
-    "f1-score": 0.8563049853372434,
+    "precision": 0.99,
+    "recall": 0.9933110367892977,
+    "f1-score": 0.991652754590985,
     "support": 299.0
   },
   "professor_john_frink": {
-    "precision": 0.9166666666666666,
-    "recall": 0.6875,
-    "f1-score": 0.7857142857142857,
+    "precision": 1.0,
+    "recall": 0.9375,
+    "f1-score": 0.967741935483871,
     "support": 16.0
   },
   "rainier_wolfcastle": {
-    "precision": 0.8888888888888888,
-    "recall": 0.7272727272727273,
-    "f1-score": 0.8,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
     "support": 11.0
   },
   "ralph_wiggum": {
     "precision": 1.0,
-    "recall": 0.7272727272727273,
-    "f1-score": 0.8421052631578947,
+    "recall": 1.0,
+    "f1-score": 1.0,
     "support": 22.0
   },
   "selma_bouvier": {
-    "precision": 0.8518518518518519,
-    "recall": 0.8846153846153846,
-    "f1-score": 0.8679245283018868,
+    "precision": 1.0,
+    "recall": 0.9230769230769231,
+    "f1-score": 0.96,
     "support": 26.0
   },
   "sideshow_bob": {
-    "precision": 0.8352941176470589,
-    "recall": 0.9726027397260274,
-    "f1-score": 0.8987341772151899,
+    "precision": 0.9954545454545455,
+    "recall": 1.0,
+    "f1-score": 0.9977220956719818,
     "support": 219.0
   },
   "sideshow_mel": {
-    "precision": 0.875,
-    "recall": 0.7,
-    "f1-score": 0.7777777777777778,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
     "support": 10.0
   },
   "snake_jailbird": {
-    "precision": 0.8333333333333334,
-    "recall": 0.35714285714285715,
-    "f1-score": 0.5,
+    "precision": 1.0,
+    "recall": 0.7857142857142857,
+    "f1-score": 0.88,
     "support": 14.0
   },
   "troy_mcclure": {
@@ -246,22 +246,22 @@
     "support": 2.0
   },
   "waylon_smithers": {
-    "precision": 0.7380952380952381,
-    "recall": 0.6888888888888889,
-    "f1-score": 0.7126436781609196,
+    "precision": 1.0,
+    "recall": 0.9777777777777777,
+    "f1-score": 0.9887640449438202,
     "support": 45.0
   },
-  "accuracy": 0.8824990447076806,
+  "accuracy": 0.9896828429499427,
   "macro avg": {
-    "precision": 0.8379563174271597,
-    "recall": 0.7862662266175093,
-    "f1-score": 0.7969807272953615,
+    "precision": 0.989208216911634,
+    "recall": 0.9681953989469785,
+    "f1-score": 0.9761887274441493,
     "support": 5234.0
   },
   "weighted avg": {
-    "precision": 0.8875084434904789,
-    "recall": 0.8824990447076806,
-    "f1-score": 0.8811867739044106,
+    "precision": 0.9897633979168887,
+    "recall": 0.9896828429499427,
+    "f1-score": 0.989612679992666,
     "support": 5234.0
   }
 }

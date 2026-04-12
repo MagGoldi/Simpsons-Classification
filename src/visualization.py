@@ -267,12 +267,9 @@ def show_misclassified_examples(predictions, labels, probabilities, dataset,
     _save_figure(save_path)
 
 
-def generate_eda_reports(train_files, val_files, label_encoder, output_dir=None):
+def generate_eda_reports(train_dataset, val_dataset, label_encoder, output_dir=None):
     output_dir = output_dir or str(config.REPORTS_DIR)
     Path(output_dir).mkdir(parents=True, exist_ok=True)
-
-    train_dataset = SimpsonsDataset(train_files, label_encoder=label_encoder, mode="val")
-    val_dataset = SimpsonsDataset(val_files, label_encoder=label_encoder, mode="val")
 
     show_augmentations(train_dataset, num_images=5,
                        save_path=os.path.join(output_dir, "01_augmentations.png"))

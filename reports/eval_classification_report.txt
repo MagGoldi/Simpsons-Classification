@@ -1,48 +1,48 @@
                           precision    recall  f1-score   support
 
-  abraham_grampa_simpson       0.95      0.84      0.89       228
-           agnes_skinner       0.69      0.90      0.78        10
-  apu_nahasapeemapetilon       0.98      0.94      0.96       156
-           barney_gumble       0.72      0.50      0.59        26
-            bart_simpson       0.85      0.81      0.83       336
-            carl_carlson       0.81      0.88      0.84        24
-charles_montgomery_burns       0.89      0.86      0.87       298
-            chief_wiggum       0.88      0.96      0.92       247
-         cletus_spuckler       1.00      0.75      0.86        12
-          comic_book_guy       0.89      0.71      0.79       117
-               disco_stu       0.67      1.00      0.80         2
-          edna_krabappel       0.84      0.94      0.89       114
-                fat_tony       0.50      1.00      0.67         7
-                     gil       0.57      0.57      0.57         7
-    groundskeeper_willie       0.86      0.83      0.85        30
-           homer_simpson       0.93      0.88      0.90       562
-           kent_brockman       0.95      0.94      0.95       125
-        krusty_the_clown       0.93      0.95      0.94       302
-           lenny_leonard       0.83      0.94      0.88        77
-             lionel_hutz       0.00      0.00      0.00         1
-            lisa_simpson       0.78      0.84      0.81       339
-          maggie_simpson       0.88      0.44      0.58        32
-           marge_simpson       0.94      0.94      0.94       323
-           martin_prince       1.00      0.50      0.67        18
-            mayor_quimby       0.96      0.74      0.83        61
-     milhouse_van_houten       0.87      0.96      0.91       270
-             miss_hoover       1.00      0.50      0.67         4
-             moe_szyslak       0.92      0.86      0.89       363
-            ned_flanders       0.94      0.94      0.94       364
-            nelson_muntz       0.95      0.78      0.85        89
-               otto_mann       0.75      0.75      0.75         8
-           patty_bouvier       0.76      0.89      0.82        18
-       principal_skinner       0.76      0.98      0.86       299
-    professor_john_frink       0.92      0.69      0.79        16
-      rainier_wolfcastle       0.89      0.73      0.80        11
-            ralph_wiggum       1.00      0.73      0.84        22
-           selma_bouvier       0.85      0.88      0.87        26
-            sideshow_bob       0.84      0.97      0.90       219
-            sideshow_mel       0.88      0.70      0.78        10
-          snake_jailbird       0.83      0.36      0.50        14
+  abraham_grampa_simpson       0.98      1.00      0.99       228
+           agnes_skinner       1.00      0.90      0.95        10
+  apu_nahasapeemapetilon       1.00      0.99      1.00       156
+           barney_gumble       0.96      1.00      0.98        26
+            bart_simpson       0.99      1.00      1.00       336
+            carl_carlson       1.00      0.92      0.96        24
+charles_montgomery_burns       0.99      1.00      0.99       298
+            chief_wiggum       0.99      0.99      0.99       247
+         cletus_spuckler       1.00      1.00      1.00        12
+          comic_book_guy       0.99      0.99      0.99       117
+               disco_stu       1.00      0.50      0.67         2
+          edna_krabappel       0.99      0.99      0.99       114
+                fat_tony       1.00      1.00      1.00         7
+                     gil       1.00      1.00      1.00         7
+    groundskeeper_willie       0.97      1.00      0.98        30
+           homer_simpson       0.99      0.99      0.99       562
+           kent_brockman       1.00      0.99      1.00       125
+        krusty_the_clown       1.00      0.99      0.99       302
+           lenny_leonard       1.00      0.99      0.99        77
+             lionel_hutz       1.00      1.00      1.00         1
+            lisa_simpson       0.99      0.99      0.99       339
+          maggie_simpson       1.00      1.00      1.00        32
+           marge_simpson       0.99      0.99      0.99       323
+           martin_prince       0.89      0.94      0.92        18
+            mayor_quimby       0.95      0.95      0.95        61
+     milhouse_van_houten       0.99      0.99      0.99       270
+             miss_hoover       1.00      1.00      1.00         4
+             moe_szyslak       0.98      0.99      0.99       363
+            ned_flanders       0.99      1.00      0.99       364
+            nelson_muntz       0.97      0.97      0.97        89
+               otto_mann       1.00      1.00      1.00         8
+           patty_bouvier       0.95      1.00      0.97        18
+       principal_skinner       0.99      0.99      0.99       299
+    professor_john_frink       1.00      0.94      0.97        16
+      rainier_wolfcastle       1.00      1.00      1.00        11
+            ralph_wiggum       1.00      1.00      1.00        22
+           selma_bouvier       1.00      0.92      0.96        26
+            sideshow_bob       1.00      1.00      1.00       219
+            sideshow_mel       1.00      1.00      1.00        10
+          snake_jailbird       1.00      0.79      0.88        14
             troy_mcclure       1.00      1.00      1.00         2
-         waylon_smithers       0.74      0.69      0.71        45
+         waylon_smithers       1.00      0.98      0.99        45
 
-                accuracy                           0.88      5234
-               macro avg       0.84      0.79      0.80      5234
-            weighted avg       0.89      0.88      0.88      5234
+                accuracy                           0.99      5234
+               macro avg       0.99      0.97      0.98      5234
+            weighted avg       0.99      0.99      0.99      5234

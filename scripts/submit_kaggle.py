@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 import config
 from src.dataset import SimpsonsDataset
-from src.models import SimpleCnn
+from src.models import SimpleCnn, SimpsonResNet
 from src.utils import load_files
 from src.logger import setup_logger
 from src.utils import get_label_encoder
@@ -53,7 +53,7 @@ def main():
     test_loader = DataLoader(test_dataset, shuffle=False, batch_size=config.BATCH_SIZE)
 
     n_classes = len(label_encoder.classes_)
-    model = SimpleCnn(n_classes=n_classes).to(config.DEVICE)
+    model = SimpsonResNet(n_classes=n_classes).to(config.DEVICE)
 
     checkpoint_path = config.CHECKPOINT_DIR / "best_model.pth"
     if not checkpoint_path.exists():

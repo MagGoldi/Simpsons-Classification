@@ -16,7 +16,7 @@ from sklearn.metrics import classification_report
 
 import config
 from src.dataset import SimpsonsDataset, create_dataloaders
-from src.models import SimpleCnn
+from src.models import SimpleCnn, SimpsonResNet
 from src.trainer import evaluate
 from src.metrics import classwise_error_analysis
 from src.utils import load_files, get_label_encoder
@@ -33,7 +33,7 @@ logger = setup_logger(__name__)
 
 
 def load_model(checkpoint_path, n_classes, device):
-    model = SimpleCnn(n_classes=n_classes).to(device)
+    model = SimpsonResNet(n_classes=n_classes).to(device)
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=True)
     if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
         model.load_state_dict(checkpoint["model_state_dict"])

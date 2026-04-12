@@ -11,6 +11,8 @@ REPORTS_DIR = PROJECT_ROOT / "reports"
 
 DATA_MODES = ["train", "val", "test"]
 
+FINE_TUNING = True
+VAL_SIZE = 0.2
 RESCALE_SIZE = [224, 224]
 BATCH_SIZE = 64
 NUM_CLASSES = 42
@@ -21,8 +23,8 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 AUGMENTATIONS_TRAIN = {
     "RandomHorizontalFlip": {"p": 0.5},
-    "RandomRotation": {"degrees": 10},
-    "ColorJitter": {"brightness": 0.2, "contrast": 0.2},
+    "RandomRotation": {"degrees": 25},
+    "RandomAffine": {"degrees": 0, "translate": (0.1, 0.1)},
 }
 
 NORMALIZE_MEAN = [0.485, 0.456, 0.406]

@@ -137,7 +137,7 @@ Open [http://localhost:5001](http://localhost:5001) to compare experiments.
 
 | Parameter       | Value       |
 |-----------------|-------------|
-| Optimizer       | Adam        |
+| Optimizer       | AdamW       |
 | Learning Rate   | 1e-3        |
 | Weight Decay    | 1e-4        |
 | Batch Size      | 64          |

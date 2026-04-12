@@ -63,11 +63,11 @@ class SimpsonsDataset(Dataset):
 
 
 def create_dataloaders(train_files, val_files, label_encoder, balanced=False):
-    train_ds = SimpsonsDataset(train_files, label_encoder, mode="train")
-    val_ds = SimpsonsDataset(val_files, label_encoder, mode="val")
+    train_dataset = SimpsonsDataset(train_files, label_encoder, mode="train")
+    val_dataset = SimpsonsDataset(val_files, label_encoder, mode="val")
 
     if balanced:
-        train_labels = np.array([train_ds[i][1] for i in range(len(train_ds))])
+        train_labels = np.array([train_dataset[i][1] for i in range(len(train_dataset))])
         class_weights = compute_class_weight(
             class_weight="balanced",
             classes=np.unique(train_labels),
@@ -83,10 +83,10 @@ def create_dataloaders(train_files, val_files, label_encoder, balanced=False):
             replacement=True,
         )
         train_loader = DataLoader(
-            train_ds, batch_size=BATCH_SIZE, sampler=sampler, num_workers=4
+            train_dataset, batch_size=BATCH_SIZE, sampler=sampler, num_workers=4
         )
     else:
-        train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
+        train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
-    val_loader = DataLoader(val_ds, batch_size=BATCH_SIZE, shuffle=False)
-    return {"train": train_loader, "val": val_loader}
+    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
+    return {"train": train_loader, "val": val_loader}, train_dataset, val_dataset
