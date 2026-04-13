@@ -1,5 +1,10 @@
+"""
+utils.py — вспомогательные функции: загрузка данных и кодирование меток.
+"""
+
 import os
 import zipfile
+from pathlib import Path
 
 from sklearn.preprocessing import LabelEncoder
 from tqdm import tqdm
@@ -9,8 +14,19 @@ from src.logger import setup_logger
 logger = setup_logger(__name__)
 
 
-def load_files(train_dir, test_dir):
-    """Load dataset file paths; download and extract if directories are empty."""
+def load_files(train_dir: Path, test_dir: Path) -> tuple:
+    """Загрузить пути к изображениям; при пустых директориях скачать и извлечь датасет.
+
+    Args:
+        train_dir: Директория с обучающими данными.
+        test_dir:  Директория с тестовыми данными.
+
+    Returns:
+        Tuple (train_val_files, test_files) — отсортированные списки путей.
+
+    Raises:
+        RuntimeError: Если gdown не установлен или скачивание/распаковка завершились ошибкой.
+    """
     train_dir.mkdir(parents=True, exist_ok=True)
     test_dir.mkdir(parents=True, exist_ok=True)
 
@@ -20,14 +36,13 @@ def load_files(train_dir, test_dir):
 
         try:
             import gdown
-
             gdown.download(
                 id="1RxBQiZgRAfio2tWhEE7lzZ6IaJzLheH1",
                 output=zip_filename,
                 quiet=False,
             )
         except ImportError:
-            raise RuntimeError("gdown is required for downloading data")
+            raise RuntimeError("gdown is required to download the dataset: pip install gdown")
         except Exception as e:
             raise RuntimeError(f"Download failed: {e}")
 
@@ -43,15 +58,22 @@ def load_files(train_dir, test_dir):
             logger.error(f"Extraction failed: {e}")
             raise
     else:
-        logger.info(f"Data found in '{train_dir}' and '{test_dir}'")
+        logger.info(f"Data found: '{train_dir}' and '{test_dir}'")
 
-    train_val_files = sorted(list(train_dir.rglob("*.jpg")))
-    test_files = sorted(list(test_dir.rglob("*.jpg")))
+    train_val_files = sorted(train_dir.rglob("*.jpg"))
+    test_files      = sorted(test_dir.rglob("*.jpg"))
     return train_val_files, test_files
 
 
-def get_label_encoder(files):
-    """Fit a LabelEncoder on parent directory names."""
+def get_label_encoder(files: list) -> tuple:
+    """Обучить LabelEncoder на именах родительских директорий файлов.
+
+    Args:
+        files: Список путей к изображениям (имя папки = имя класса).
+
+    Returns:
+        Tuple (label_encoder, labels) — обученный encoder и список строковых меток.
+    """
     labels = [f.parent.name for f in files]
     le = LabelEncoder()
     le.fit(labels)

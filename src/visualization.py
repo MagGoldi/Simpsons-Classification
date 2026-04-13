@@ -1,3 +1,7 @@
+"""
+visualization.py — функции для EDA, визуализации обучения и анализа ошибок.
+"""
+
 import os
 from pathlib import Path
 from collections import defaultdict
@@ -39,6 +43,7 @@ def _denormalize(img_tensor):
 
 
 def imshow(inp, title=None, plt_ax=None):
+    """Отобразить денормализованный тензор изображения на оси matplotlib."""
     if plt_ax is None:
         _, plt_ax = plt.subplots()
     plt_ax.imshow(_denormalize(inp))
@@ -48,6 +53,7 @@ def imshow(inp, title=None, plt_ax=None):
 
 
 def show_augmentations(dataset, num_images=5, save_path=None):
+    """Показать первые num_images примеров тренировочных аугментаций."""
     fig, axes = plt.subplots(1, num_images, figsize=(15, 4))
     for i in range(num_images):
         img, label = dataset[i]
@@ -59,6 +65,7 @@ def show_augmentations(dataset, num_images=5, save_path=None):
 
 
 def show_images(dataset, label_encoder, n_rows=3, n_cols=6, save_path=None):
+    """Показать случайную сетку изображений из датасета с метками."""
     fig, axes = plt.subplots(
         nrows=n_rows, ncols=n_cols,
         figsize=(n_cols * 4, n_rows * 4),
@@ -79,6 +86,7 @@ def show_images(dataset, label_encoder, n_rows=3, n_cols=6, save_path=None):
 
 
 def plot_training_history(history, save_path=None):
+    """Построить графики loss и accuracy/F1 по эпохам из списка history."""
     df = pd.DataFrame(history).set_index("epoch")
     sns.set_style("whitegrid")
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
@@ -125,6 +133,7 @@ def plot_training_history(history, save_path=None):
 @torch.no_grad()
 def show_model_predictions(predictions, probabilities, dataset, label_encoder,
                            n_rows=3, n_cols=3, save_path=None):
+    """Сетка случайных изображений с предсказанными метками и уверенностью модели."""
     fig, axs = plt.subplots(
         nrows=n_rows, ncols=n_cols,
         figsize=(n_cols * 4, n_rows * 4),
@@ -183,6 +192,7 @@ def analyze_predictions(all_preds, all_labels, all_probs, label_encoder):
 
 
 def plot_error_analysis(df_results, save_path=None, top_n=10):
+    """Три графика: топ ошибочных классов, размер классов, correct vs errors."""
     fig, axes = plt.subplots(1, 3, figsize=(18, 6))
 
     top_errors = df_results.nlargest(top_n, "error_rate")
@@ -203,6 +213,7 @@ def plot_error_analysis(df_results, save_path=None, top_n=10):
 
 
 def plot_confusion_matrix(all_preds, all_labels, label_encoder, save_path=None, top_n=12):
+    """Нормированная матрица ошибок по top_n классам с наибольшим числом ошибок."""
     class_names = [
         label_encoder.inverse_transform([i])[0].split("_")[-1]
         for i in range(len(label_encoder.classes_))
@@ -230,6 +241,7 @@ def plot_confusion_matrix(all_preds, all_labels, label_encoder, save_path=None, 
 
 def show_misclassified_examples(predictions, labels, probabilities, dataset,
                                 label_encoder, save_path=None, num_examples=9):
+    """Показать случайные неверно классифицированные примеры с подписями."""
     mis_indices = np.where(predictions != labels)[0]
     if len(mis_indices) == 0:
         logger.info("No misclassified examples found")
@@ -268,6 +280,7 @@ def show_misclassified_examples(predictions, labels, probabilities, dataset,
 
 
 def generate_eda_reports(train_dataset, val_dataset, label_encoder, output_dir=None):
+    """Сохранить EDA-отчёты: аугментации и примеры изображений датасета."""
     output_dir = output_dir or str(config.REPORTS_DIR)
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
@@ -314,6 +327,7 @@ def generate_post_training_reports(result, val_dataset, label_encoder, output_di
 
 
 def log_confusion_matrix(y_true, y_pred, class_names, step, artifact_path="confusion_matrix"):
+    """Записать матрицу ошибок как артефакт текущего MLflow run."""
     cm = confusion_matrix(y_true, y_pred)
     plt.figure(figsize=(12, 10))
     sns.heatmap(

@@ -1,50 +1,50 @@
 {
   "abraham_grampa_simpson": {
-    "precision": 0.978448275862069,
-    "recall": 0.9956140350877193,
-    "f1-score": 0.9869565217391304,
+    "precision": 0.995575221238938,
+    "recall": 0.9868421052631579,
+    "f1-score": 0.9911894273127754,
     "support": 228.0
   },
   "agnes_skinner": {
     "precision": 1.0,
-    "recall": 0.9,
-    "f1-score": 0.9473684210526315,
+    "recall": 1.0,
+    "f1-score": 1.0,
     "support": 10.0
   },
   "apu_nahasapeemapetilon": {
     "precision": 1.0,
-    "recall": 0.9935897435897436,
-    "f1-score": 0.9967845659163987,
+    "recall": 1.0,
+    "f1-score": 1.0,
     "support": 156.0
   },
   "barney_gumble": {
-    "precision": 0.9629629629629629,
-    "recall": 1.0,
-    "f1-score": 0.9811320754716981,
+    "precision": 0.96,
+    "recall": 0.9230769230769231,
+    "f1-score": 0.9411764705882353,
     "support": 26.0
   },
   "bart_simpson": {
-    "precision": 0.9940652818991098,
-    "recall": 0.9970238095238095,
-    "f1-score": 0.9955423476968797,
+    "precision": 0.9970059880239521,
+    "recall": 0.9910714285714286,
+    "f1-score": 0.9940298507462687,
     "support": 336.0
   },
   "carl_carlson": {
     "precision": 1.0,
-    "recall": 0.9166666666666666,
-    "f1-score": 0.9565217391304348,
+    "recall": 1.0,
+    "f1-score": 1.0,
     "support": 24.0
   },
   "charles_montgomery_burns": {
-    "precision": 0.99,
-    "recall": 0.9966442953020134,
-    "f1-score": 0.9933110367892977,
+    "precision": 0.9833333333333333,
+    "recall": 0.9899328859060402,
+    "f1-score": 0.9866220735785953,
     "support": 298.0
   },
   "chief_wiggum": {
-    "precision": 0.9919028340080972,
+    "precision": 0.9839357429718876,
     "recall": 0.9919028340080972,
-    "f1-score": 0.9919028340080972,
+    "f1-score": 0.9879032258064516,
     "support": 247.0
   },
   "cletus_spuckler": {
@@ -54,9 +54,9 @@
     "support": 12.0
   },
   "comic_book_guy": {
-    "precision": 0.9914529914529915,
-    "recall": 0.9914529914529915,
-    "f1-score": 0.9914529914529915,
+    "precision": 0.9915254237288136,
+    "recall": 1.0,
+    "f1-score": 0.9957446808510638,
     "support": 117.0
   },
   "disco_stu": {
@@ -66,9 +66,9 @@
     "support": 2.0
   },
   "edna_krabappel": {
-    "precision": 0.9912280701754386,
-    "recall": 0.9912280701754386,
-    "f1-score": 0.9912280701754386,
+    "precision": 1.0,
+    "recall": 0.9824561403508771,
+    "f1-score": 0.9911504424778761,
     "support": 114.0
   },
   "fat_tony": {
@@ -84,15 +84,15 @@
     "support": 7.0
   },
   "groundskeeper_willie": {
-    "precision": 0.967741935483871,
+    "precision": 1.0,
     "recall": 1.0,
-    "f1-score": 0.9836065573770492,
+    "f1-score": 1.0,
     "support": 30.0
   },
   "homer_simpson": {
-    "precision": 0.9875666074600356,
-    "recall": 0.9893238434163701,
-    "f1-score": 0.9884444444444445,
+    "precision": 0.9893617021276596,
+    "recall": 0.9928825622775801,
+    "f1-score": 0.9911190053285968,
     "support": 562.0
   },
   "kent_brockman": {
@@ -102,9 +102,9 @@
     "support": 125.0
   },
   "krusty_the_clown": {
-    "precision": 0.9966666666666667,
+    "precision": 0.9933554817275747,
     "recall": 0.9900662251655629,
-    "f1-score": 0.9933554817275747,
+    "f1-score": 0.9917081260364843,
     "support": 302.0
   },
   "lenny_leonard": {
@@ -120,39 +120,39 @@
     "support": 1.0
   },
   "lisa_simpson": {
-    "precision": 0.9940652818991098,
-    "recall": 0.9882005899705014,
-    "f1-score": 0.9911242603550295,
+    "precision": 0.9854651162790697,
+    "recall": 1.0,
+    "f1-score": 0.9926793557833089,
     "support": 339.0
   },
   "maggie_simpson": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
+    "precision": 0.967741935483871,
+    "recall": 0.9375,
+    "f1-score": 0.9523809523809523,
     "support": 32.0
   },
   "marge_simpson": {
-    "precision": 0.9906832298136646,
+    "precision": 0.996875,
     "recall": 0.9876160990712074,
-    "f1-score": 0.9891472868217054,
+    "f1-score": 0.9922239502332815,
     "support": 323.0
   },
   "martin_prince": {
-    "precision": 0.8947368421052632,
-    "recall": 0.9444444444444444,
-    "f1-score": 0.918918918918919,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
     "support": 18.0
   },
   "mayor_quimby": {
-    "precision": 0.9508196721311475,
-    "recall": 0.9508196721311475,
-    "f1-score": 0.9508196721311475,
+    "precision": 0.9523809523809523,
+    "recall": 0.9836065573770492,
+    "f1-score": 0.967741935483871,
     "support": 61.0
   },
   "milhouse_van_houten": {
-    "precision": 0.9925373134328358,
-    "recall": 0.9851851851851852,
-    "f1-score": 0.9888475836431226,
+    "precision": 0.9962962962962963,
+    "recall": 0.9962962962962963,
+    "f1-score": 0.9962962962962963,
     "support": 270.0
   },
   "miss_hoover": {
@@ -162,21 +162,21 @@
     "support": 4.0
   },
   "moe_szyslak": {
-    "precision": 0.9836512261580381,
+    "precision": 0.989041095890411,
     "recall": 0.9944903581267218,
-    "f1-score": 0.989041095890411,
+    "f1-score": 0.9917582417582418,
     "support": 363.0
   },
   "ned_flanders": {
-    "precision": 0.989100817438692,
-    "recall": 0.9972527472527473,
-    "f1-score": 0.9931600547195623,
+    "precision": 0.9809782608695652,
+    "recall": 0.9917582417582418,
+    "f1-score": 0.9863387978142076,
     "support": 364.0
   },
   "nelson_muntz": {
-    "precision": 0.9662921348314607,
-    "recall": 0.9662921348314607,
-    "f1-score": 0.9662921348314607,
+    "precision": 0.9886363636363636,
+    "recall": 0.9775280898876404,
+    "f1-score": 0.9830508474576272,
     "support": 89.0
   },
   "otto_mann": {
@@ -186,21 +186,21 @@
     "support": 8.0
   },
   "patty_bouvier": {
-    "precision": 0.9473684210526315,
-    "recall": 1.0,
-    "f1-score": 0.972972972972973,
+    "precision": 1.0,
+    "recall": 0.9444444444444444,
+    "f1-score": 0.9714285714285714,
     "support": 18.0
   },
   "principal_skinner": {
-    "precision": 0.99,
-    "recall": 0.9933110367892977,
-    "f1-score": 0.991652754590985,
+    "precision": 0.9932659932659933,
+    "recall": 0.9866220735785953,
+    "f1-score": 0.9899328859060402,
     "support": 299.0
   },
   "professor_john_frink": {
-    "precision": 1.0,
-    "recall": 0.9375,
-    "f1-score": 0.967741935483871,
+    "precision": 0.9411764705882353,
+    "recall": 1.0,
+    "f1-score": 0.9696969696969697,
     "support": 16.0
   },
   "rainier_wolfcastle": {
@@ -216,27 +216,27 @@
     "support": 22.0
   },
   "selma_bouvier": {
-    "precision": 1.0,
-    "recall": 0.9230769230769231,
-    "f1-score": 0.96,
+    "precision": 0.9615384615384616,
+    "recall": 0.9615384615384616,
+    "f1-score": 0.9615384615384616,
     "support": 26.0
   },
   "sideshow_bob": {
-    "precision": 0.9954545454545455,
-    "recall": 1.0,
-    "f1-score": 0.9977220956719818,
+    "precision": 0.9954128440366973,
+    "recall": 0.9908675799086758,
+    "f1-score": 0.9931350114416476,
     "support": 219.0
   },
   "sideshow_mel": {
     "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
+    "recall": 0.9,
+    "f1-score": 0.9473684210526315,
     "support": 10.0
   },
   "snake_jailbird": {
     "precision": 1.0,
-    "recall": 0.7857142857142857,
-    "f1-score": 0.88,
+    "recall": 1.0,
+    "f1-score": 1.0,
     "support": 14.0
   },
   "troy_mcclure": {
@@ -246,22 +246,22 @@
     "support": 2.0
   },
   "waylon_smithers": {
-    "precision": 1.0,
+    "precision": 0.9777777777777777,
     "recall": 0.9777777777777777,
-    "f1-score": 0.9887640449438202,
+    "f1-score": 0.9777777777777777,
     "support": 45.0
   },
-  "accuracy": 0.9896828429499427,
+  "accuracy": 0.9904470768055025,
   "macro avg": {
-    "precision": 0.989208216911634,
-    "recall": 0.9681953989469785,
-    "f1-score": 0.9761887274441493,
+    "precision": 0.9909685585999012,
+    "recall": 0.975173573128518,
+    "f1-score": 0.9809549150827012,
     "support": 5234.0
   },
   "weighted avg": {
-    "precision": 0.9897633979168887,
-    "recall": 0.9896828429499427,
-    "f1-score": 0.989612679992666,
+    "precision": 0.9905019908019378,
+    "recall": 0.9904470768055025,
+    "f1-score": 0.9904108862757008,
     "support": 5234.0
   }
 }

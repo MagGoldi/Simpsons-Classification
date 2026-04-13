@@ -1,10 +1,10 @@
 {
-  "val_loss": 0.040469335188923074,
-  "val_accuracy": 0.9896828532218933,
-  "val_f1_macro": 0.9761887788772583,
-  "val_f1_weighted": 0.9896126389503479,
-  "macro_precision": 0.989208216911634,
-  "macro_recall": 0.9681953989469785,
-  "weighted_precision": 0.9897633979168887,
-  "weighted_recall": 0.9896828429499427
+  "val_loss": 0.03648092055508886,
+  "val_accuracy": 0.9904471039772034,
+  "val_f1_macro": 0.9809549450874329,
+  "val_f1_weighted": 0.9904108643531799,
+  "macro_precision": 0.9909685585999012,
+  "macro_recall": 0.975173573128518,
+  "weighted_precision": 0.9905019908019378,
+  "weighted_recall": 0.9904470768055025
 }
