@@ -111,6 +111,7 @@ def create_dataloaders(
     label_encoder,
     balanced: bool = False,
     upsample: bool = False,
+    batch_size: int = BATCH_SIZE,
 ) -> tuple:
     """Создать DataLoader'ы для train и val разбивок.
 
@@ -146,10 +147,10 @@ def create_dataloaders(
             weights=sample_weights, num_samples=len(sample_weights), replacement=True
         )
         train_loader = DataLoader(
-            train_dataset, batch_size=BATCH_SIZE, sampler=sampler, num_workers=4
+            train_dataset, batch_size=batch_size, sampler=sampler, num_workers=4
         )
     else:
-        train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
 
-    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4)
     return {"train": train_loader, "val": val_loader}, train_dataset, val_dataset

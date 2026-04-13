@@ -1,6 +1,6 @@
 # Simpsons Character Classification
 
-> **Best Public Score: `0.94580`**
+> **Best Public Score: `0.99787`**
 
 <p align="center">
   <img src="reports/04_predictions_grid.png" alt="Simpsons Model Predictions" width="800">

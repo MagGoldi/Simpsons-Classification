@@ -31,12 +31,20 @@ LEARNING_RATE: float = 1e-3
 WEIGHT_DECAY: float = 1e-4
 EARLY_STOPPING_PATIENCE: int = 7
 
-# --- Fine-tuning --------------------------------------------------------------
-# Если True — после базового обучения размораживает backbone и дообучает
-# при пониженном LR (FINETUNE_LR).
-FINE_TUNING: bool = True
+# --- Стратегия обучения backbone ---------------------------------------------
+# FREEZE_BACKBONE = False — классическое обучение: все слои открыты с самого
+#   начала. Используется FINETUNE_BATCH_SIZE (он меньше, т.к. нужно больше VRAM).
+#
+# FREEZE_BACKBONE = True  — двухэтапное обучение:
+#   Этап 1: backbone заморожен, тренируется только голова (быстро, мало VRAM).
+#   Этап 2 (если FINE_TUNING=True): backbone размораживается, fine-tune
+#           при низком LR и меньшем batch (FINETUNE_BATCH_SIZE).
+FREEZE_BACKBONE: bool = False
+
+FINE_TUNING: bool = False      # этап 2, только при FREEZE_BACKBONE=True
 FINETUNE_LR: float = 1e-5
-FINETUNE_EPOCHS: int = 15  # эпохи для этапа fine-tuning
+FINETUNE_EPOCHS: int = 15        # эпохи для этапа fine-tuning
+FINETUNE_BATCH_SIZE: int = 32    # batch при открытом backbone (экономия VRAM)
 
 # --- Данные -------------------------------------------------------------------
 VAL_SIZE: float = 0.2        # доля валидации (0.0–1.0)

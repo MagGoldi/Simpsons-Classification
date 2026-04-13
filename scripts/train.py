@@ -52,13 +52,16 @@ def main():
         train_val_files, test_size=config.VAL_SIZE, stratify=train_val_labels, random_state=42
     )
 
-    loaders, train_dataset, val_dataset = create_dataloaders(
+    # Создаём датасеты только для EDA-отчётов; DataLoader'ы для обучения
+    # пересоздаются ниже с нужным batch_size в зависимости от стратегии.
+    _, eda_train_dataset, eda_val_dataset = create_dataloaders(
         train_files, val_files, label_encoder,
         balanced=False, upsample=config.UPSAMPLE,
+        batch_size=config.BATCH_SIZE,
     )
 
     generate_eda_reports(
-        train_dataset, val_dataset, label_encoder,
+        eda_train_dataset, eda_val_dataset, label_encoder,
         output_dir=str(config.REPORTS_DIR),
     )
 
@@ -72,54 +75,111 @@ def main():
 
     criterion = torch.nn.CrossEntropyLoss()
 
-    # --- Этап 1: обучение с замороженным backbone -----------------------------
-    logger.info("Stage 1: training classifier head (backbone frozen)")
-    model.freeze_backbone()
-
-    optimizer = optim.AdamW(
-        filter(lambda p: p.requires_grad, model.parameters()),
-        lr=config.LEARNING_RATE,
-        weight_decay=config.WEIGHT_DECAY,
-    )
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=3)
-
-    result = train_loop(
-        model=model,
-        train_loader=loaders["train"],
-        val_loader=loaders["val"],
-        optimizer=optimizer,
-        scheduler=scheduler,
-        loss_func=criterion,
-        max_epochs=config.MAX_EPOCHS,
-        device=config.DEVICE,
-        patience=config.EARLY_STOPPING_PATIENCE,
-        experiment_name=f"{config.MODEL_NAME}_frozen",
-    )
-
-    # --- Этап 2: fine-tuning (опционально) ------------------------------------
-    if config.FINE_TUNING:
-        logger.info("Stage 2: fine-tuning (backbone unfrozen)")
+    if not config.FREEZE_BACKBONE:
+        # ── Классическое обучение: все слои открыты с самого начала ──────────
+        logger.info(
+            f"Classic training (all layers, batch_size={config.FINETUNE_BATCH_SIZE})"
+        )
         model.unfreeze_backbone()
+        torch.cuda.empty_cache()
 
-        optimizer_ft = optim.AdamW(
+        # При открытом backbone нужен меньший batch (больше VRAM на градиенты)
+        loaders, train_dataset, val_dataset = create_dataloaders(
+            train_files, val_files, label_encoder,
+            balanced=False, upsample=config.UPSAMPLE,
+            batch_size=config.FINETUNE_BATCH_SIZE,
+        )
+
+        optimizer = optim.AdamW(
             model.parameters(),
-            lr=config.FINETUNE_LR,
+            lr=config.LEARNING_RATE,
             weight_decay=config.WEIGHT_DECAY,
         )
-        scheduler_ft = optim.lr_scheduler.ReduceLROnPlateau(optimizer_ft, mode="min", patience=3)
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=3)
 
         result = train_loop(
             model=model,
             train_loader=loaders["train"],
             val_loader=loaders["val"],
-            optimizer=optimizer_ft,
-            scheduler=scheduler_ft,
+            optimizer=optimizer,
+            scheduler=scheduler,
             loss_func=criterion,
-            max_epochs=config.FINETUNE_EPOCHS,
+            max_epochs=config.MAX_EPOCHS,
             device=config.DEVICE,
             patience=config.EARLY_STOPPING_PATIENCE,
-            experiment_name=f"{config.MODEL_NAME}_finetune",
+            experiment_name=f"{config.MODEL_NAME}_classic",
         )
+
+    else:
+        # ── Двухэтапное обучение ──────────────────────────────────────────────
+        # DataLoader с полным batch для этапа 1 (backbone заморожен → мало VRAM)
+
+        torch.cuda.empty_cache()
+        loaders, train_dataset, val_dataset = create_dataloaders(
+            train_files, val_files, label_encoder,
+            balanced=False, upsample=config.UPSAMPLE,
+            batch_size=config.BATCH_SIZE,
+        )
+
+        # Этап 1: тренируем только голову -----------------------------------
+        logger.info(
+            f"Stage 1: frozen backbone, head only (batch_size={config.BATCH_SIZE})"
+        )
+        model.freeze_backbone()
+
+        optimizer = optim.AdamW(
+            filter(lambda p: p.requires_grad, model.parameters()),
+            lr=config.LEARNING_RATE,
+            weight_decay=config.WEIGHT_DECAY,
+        )
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=3)
+
+        result = train_loop(
+            model=model,
+            train_loader=loaders["train"],
+            val_loader=loaders["val"],
+            optimizer=optimizer,
+            scheduler=scheduler,
+            loss_func=criterion,
+            max_epochs=config.MAX_EPOCHS,
+            device=config.DEVICE,
+            patience=config.EARLY_STOPPING_PATIENCE,
+            experiment_name=f"{config.MODEL_NAME}_frozen",
+        )
+
+        # Этап 2: fine-tuning всего backbone (опционально) ------------------
+        if config.FINE_TUNING:
+            logger.info(
+                f"Stage 2: fine-tuning all layers (batch_size={config.FINETUNE_BATCH_SIZE})"
+            )
+            model.unfreeze_backbone()
+            torch.cuda.empty_cache()
+
+            ft_loaders, _, _ = create_dataloaders(
+                train_files, val_files, label_encoder,
+                balanced=False, upsample=config.UPSAMPLE,
+                batch_size=config.FINETUNE_BATCH_SIZE,
+            )
+
+            optimizer_ft = optim.AdamW(
+                model.parameters(),
+                lr=config.FINETUNE_LR,
+                weight_decay=config.WEIGHT_DECAY,
+            )
+            scheduler_ft = optim.lr_scheduler.ReduceLROnPlateau(optimizer_ft, mode="min", patience=3)
+
+            result = train_loop(
+                model=model,
+                train_loader=ft_loaders["train"],
+                val_loader=ft_loaders["val"],
+                optimizer=optimizer_ft,
+                scheduler=scheduler_ft,
+                loss_func=criterion,
+                max_epochs=config.FINETUNE_EPOCHS,
+                device=config.DEVICE,
+                patience=config.EARLY_STOPPING_PATIENCE,
+                experiment_name=f"{config.MODEL_NAME}_finetune",
+            )
 
     # --- Отчёты и чекпоинт ---------------------------------------------------
     logger.info("Generating post-training reports")

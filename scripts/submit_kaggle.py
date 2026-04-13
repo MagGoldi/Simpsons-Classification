@@ -14,7 +14,7 @@ from tqdm import tqdm
 
 import config
 from src.dataset import SimpsonsDataset
-from src.models import SimpleCnn, SimpsonResNet
+from src.models import build_model
 from src.utils import load_files
 from src.logger import setup_logger
 from src.utils import get_label_encoder
@@ -23,6 +23,7 @@ logger = setup_logger(__name__)
 
 
 def predict(model, loader, device):
+    """Генерация предсказаний на тестовом наборе."""
     model.eval()
     all_predictions = []
     logger.info("Generating predictions on test set")
@@ -38,6 +39,7 @@ def predict(model, loader, device):
 
 
 def main():
+    """Загрузка лучшей модели и генерация CSV для Kaggle."""
     le_path = config.DATA_DIR / "label_encoder.pkl"
     if not le_path.exists():
         logger.warning(f"{le_path} not found — recreating from train files")
@@ -52,8 +54,13 @@ def main():
     test_dataset = SimpsonsDataset(test_files, label_encoder=label_encoder, mode="test")
     test_loader = DataLoader(test_dataset, shuffle=False, batch_size=config.BATCH_SIZE)
 
+    # Загружаем модель через фабрику согласно config.MODEL_NAME
     n_classes = len(label_encoder.classes_)
-    model = SimpsonResNet(n_classes=n_classes).to(config.DEVICE)
+    model = build_model(
+        model_name=config.MODEL_NAME,
+        n_classes=n_classes,
+        pretrained=False,  # веса загрузим из чекпоинта
+    ).to(config.DEVICE)
 
     checkpoint_path = config.CHECKPOINT_DIR / "best_model.pth"
     if not checkpoint_path.exists():
