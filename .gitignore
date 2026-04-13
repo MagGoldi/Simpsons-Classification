@@ -1,13 +1,19 @@
-# Data
+# ── Data ──────────────────────────────────────────────────────────────────────
 data/
-*.csv
+*.zip
 
-# MLflow
+# ── MLflow ────────────────────────────────────────────────────────────────────
 mlruns/
 mlflow.db
-*.sh
 
-# Python
+# ── Reports (generated artifacts — keep directory structure) ──────────────────
+reports/*.png
+reports/*.jpg
+reports/*.csv
+reports/*.json
+reports/logs/
+
+# ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
@@ -15,22 +21,35 @@ __pycache__/
 dist/
 build/
 *.egg
+.eggs/
 
-# Virtual environments
+# ── Virtual environments ───────────────────────────────────────────────────────
 .venv/
 venv/
 env/
+.python-version
 
-# IDE
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_meta
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# OS
+# ── OS ────────────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# ── Secrets / credentials ─────────────────────────────────────────────────────
+.env
+*.env
+*.key
+secrets.yaml
 
 # Reports (keep structure, ignore generated content)
 data/*.png

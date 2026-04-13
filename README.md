@@ -1,116 +1,127 @@
 # Simpsons Character Classification
 
-> **Actual Public Score: `0.94580`**
+> **Best Public Score: `0.94580`**
 
 <p align="center">
-  <img src="reports/eval_predictions_grid.png" alt="Simpsons Model Predictions" width="800">
+  <img src="reports/04_predictions_grid.png" alt="Simpsons Model Predictions" width="800">
   <br>
   <i>Sample model predictions with confidence scores on the validation set</i>
 </p>
 
-Image classification pipeline for the [Journey to Springfield](https://www.kaggle.com/competitions/journey-to-springfield1) Kaggle competition — 42-class character recognition from *The Simpsons* using a custom CNN with MLflow experiment tracking.
+Image classification pipeline for the [Journey to Springfield](https://www.kaggle.com/competitions/journey-to-springfield1) Kaggle competition — 42-class character recognition from *The Simpsons* using EfficientNet / ResNet / custom CNN with MLflow experiment tracking.
+
+---
 
 ## Project Structure
 
 ```
-simpsons_classification/
-├── config.py                     # hyperparameters, paths, augmentation config
-├── README.md
+Simpsons-Classification/
+├── config.py                  # ← единственное место настроек (LR, модель, и т.д.)
 ├── requirements.txt
 ├── .gitignore
+├── README.md
 │
-├── src/                          # core library
+├── src/                       # core library
 │   ├── __init__.py
-│   ├── dataset.py                # SimpsonsDataset, DataLoader factory
-│   ├── models.py                 # SimpleCnn architecture
-│   ├── trainer.py                # training loop, early stopping, MLflow logging
-│   ├── metrics.py                # F1-score, per-class error analysis
-│   ├── utils.py                  # data loading, label encoding
-│   ├── visualization.py          # EDA, training curves, confusion matrices
-│   └── logger.py                 # centralized logging setup
+│   ├── dataset.py             # SimpsonsDataset, DataLoader factory, upsampling
+│   ├── models.py              # SimpleCnn, SimpsonResNet, SimpsonEfficientNet, build_model()
+│   ├── trainer.py             # train_loop с early stopping и MLflow логированием
+│   ├── metrics.py             # F1-score (без sklearn), per-class error analysis
+│   ├── utils.py               # загрузка данных, label encoding
+│   ├── visualization.py       # EDA, training curves, confusion matrices
+│   └── logger.py              # настройка логгера (stdout + файл)
 │
-├── scripts/                      # entry points
-│   ├── train.py                  # end-to-end training pipeline
-│   ├── evaluate.py               # standalone model evaluation
-│   └── submit_kaggle.py          # generate submission CSV
+├── scripts/
+│   ├── train.py               # точка входа: параметры берутся из config.py автоматически
+│   ├── evaluate.py            # автономная оценка сохранённого чекпоинта
+│   └── submit_kaggle.py       # генерация submission.csv
 │
-├── notebooks/                    # exploratory analysis
+├── notebooks/
 │   └── hw_5_1.ipynb
 │
-├── data/                         # auto-downloaded on first run
+├── data/                      # скачивается автоматически при первом запуске
 │   ├── train/
 │   ├── testset/
 │   └── checkpoints/
 │
-├── reports/                      # generated artifacts
-│   ├── logs/                     # persistent log files (append-only)
-│   ├── *.png                     # training & evaluation charts
-│   ├── *.csv                     # error statistics, submission
-│   └── *.json                    # evaluation summaries
-│
-└── mlruns/                       # MLflow tracking (auto-generated)
+└── reports/                   # генерируется автоматически
+    ├── logs/app.log
+    ├── 01_augmentations.png
+    ├── 02_sample_images.png
+    ├── 03_training_history.png
+    ├── 04_predictions_grid.png
+    ├── 05_error_statistics.csv
+    ├── 06_error_analysis.png
+    ├── 07_confusion_matrix.png
+    ├── 08_misclassified_examples.png
+    └── training_history.csv
 ```
+
+---
 
 ## Quick Start
 
 ### Prerequisites
 
 - Python 3.12+
-- CUDA-capable GPU (recommended)
+- CUDA-capable GPU (рекомендуется)
 
 ### Installation
 
 ```bash
-# Clone the repository
 git clone <repository-url>
-cd simpsons_classification
+cd Simpsons-Classification
 
-# Install dependencies (using uv)
+# с uv (рекомендуется)
 uv pip install -r requirements.txt
 
-# Or with pip
+# или с pip
 pip install -r requirements.txt
 ```
+
+### Настройка
+
+Откройте `config.py` и задайте нужные параметры в секции **USER SETTINGS**:
+
+```python
+MODEL_NAME   = "efficientnet-b4"   # или "resnet50", "simple_cnn" и т.д.
+MAX_EPOCHS   = 25
+BATCH_SIZE   = 64
+LEARNING_RATE = 1e-3
+FINE_TUNING  = True                # дообучить backbone после основного этапа
+```
+
+Больше ничего менять не нужно — `train.py` подхватит всё автоматически.
 
 ### Training
 
 ```bash
+python scripts/train.py
+# или через uv:
 uv run python scripts/train.py
 ```
 
-This will:
-1. Download and extract the dataset (first run only)
-2. Generate EDA reports in `reports/`
-3. Train the model with early stopping
-4. Log all metrics to MLflow
-5. Save the best checkpoint to `data/checkpoints/`
-6. Generate post-training visualizations
+Пайплайн выполнит:
+1. Скачивание и распаковку датасета (только при первом запуске)
+2. EDA-отчёты в `reports/`
+3. Обучение с frozen backbone → fine-tuning (если `FINE_TUNING=True`)
+4. Early stopping + логирование всех метрик в MLflow
+5. Сохранение лучшего чекпоинта в `data/checkpoints/best_model.pth`
+6. Пост-тренировочные визуализации
 
 ### Evaluation
 
 ```bash
-uv run python scripts/evaluate.py
-```
-
-Runs a full evaluation on the validation set and produces:
-- Classification report (text + JSON)
-- Confusion matrix
-- Per-class error analysis
-- Misclassified examples visualization
-
-**Options:**
-
-```bash
-uv run python scripts/evaluate.py --checkpoint path/to/model.pth --output-dir reports/
+python scripts/evaluate.py
 ```
 
 ### Kaggle Submission
 
 ```bash
-uv run python scripts/submit_kaggle.py
+python scripts/submit_kaggle.py
 ```
 
-Generates `reports/submission.csv` ready for Kaggle upload.
+Генерирует `reports/submission.csv` для загрузки на Kaggle.
 
 ### MLflow UI
 
@@ -118,67 +129,78 @@ Generates `reports/submission.csv` ready for Kaggle upload.
 uv run mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5001 --host 0.0.0.0
 ```
 
-Open [http://localhost:5001](http://localhost:5001) to compare experiments.
+Открыть: [http://localhost:5001](http://localhost:5001)
 
-## Model Architecture
+---
 
-**SimpleCnn** — lightweight 5-block convolutional network:
+## Supported Models
 
-```
-5 × (Conv2d → BatchNorm2d → ReLU → MaxPool2d) → Dropout(0.2) → Linear
-```
+| `MODEL_NAME`         | Тип          | Параметры (~) |
+|----------------------|--------------|---------------|
+| `simple_cnn`         | Custom CNN   | ~1M           |
+| `resnet18`           | ResNet       | 11M           |
+| `resnet50`           | ResNet       | 25M           |
+| `efficientnet-b0`    | EfficientNet | 5M            |
+| `efficientnet-b4`    | EfficientNet | 19M           |
+| `efficientnet-b7`    | EfficientNet | 66M           |
 
-- Input: `(B, 3, 224, 224)` RGB images
-- Output: `(B, 42)` class logits
-- Augmentations: random horizontal flip, rotation, affine translation
-- Normalization: ImageNet statistics
+---
 
-## Training Configuration
+## Training Configuration (defaults)
 
-| Parameter       | Value       |
-|-----------------|-------------|
-| Optimizer       | AdamW       |
-| Learning Rate   | 1e-3        |
-| Weight Decay    | 1e-4        |
-| Batch Size      | 64          |
-| Scheduler       | ReduceLROnPlateau |
-| Early Stopping  | patience=7  |
-| Image Size      | 224 × 224   |
+| Параметр          | Значение            |
+|-------------------|---------------------|
+| Optimizer         | AdamW               |
+| Learning Rate     | 1e-3 (frozen), 1e-5 (fine-tune) |
+| Weight Decay      | 1e-4                |
+| Batch Size        | 64                  |
+| Scheduler         | ReduceLROnPlateau   |
+| Early Stopping    | patience=7          |
+| Image Size        | 224 × 224           |
+| Upsampling        | ≥ 300 samples/class |
+| Val Split         | 20%                 |
+
+---
 
 ## Tech Stack
 
-| Library        | Version   |
-|----------------|-----------|
-| Python         | 3.12.3    |
-| PyTorch        | 2.11.0    |
-| torchvision    | 0.26.0    |
-| MLflow         | 3.11.1    |
-| scikit-learn   | 1.8.0     |
-| matplotlib     | 3.10.8    |
-| seaborn        | 0.13.2    |
-| pandas         | 2.3.3     |
-| NumPy          | 2.4.3     |
-| Pillow         | 12.1.1    |
-| tqdm           | 4.67.3    |
-| gdown          | 5.2.1     |
+| Library              | Version   |
+|----------------------|-----------|
+| Python               | 3.12+     |
+| PyTorch              | ≥ 2.11.0  |
+| torchvision          | ≥ 0.26.0  |
+| efficientnet-pytorch | 0.7.1     |
+| MLflow               | ≥ 3.11.0  |
+| scikit-learn         | ≥ 1.8.0   |
+| matplotlib           | ≥ 3.10.0  |
+| seaborn              | ≥ 0.13.0  |
+| pandas               | ≥ 2.3.0   |
+| NumPy                | ≥ 2.4.0   |
+| Pillow               | ≥ 12.1.0  |
+| tqdm                 | ≥ 4.67.0  |
+| gdown                | ≥ 5.2.0   |
+
+---
 
 ## Reports
 
-All artifacts are saved to `reports/`:
+Все артефакты сохраняются в `reports/` автоматически:
 
-| File | Description |
-|------|-------------|
-| `01_augmentations.png` | Sample augmented training images |
-| `02_sample_images.png` | Random grid from the dataset |
-| `03_training_history.png` | Loss & accuracy curves |
-| `04_predictions_grid.png` | Model predictions with confidence |
-| `05_error_statistics.csv` | Per-class error rates |
-| `06_error_analysis.png` | Error distribution charts |
-| `07_confusion_matrix.png` | Top-error confusion matrix |
-| `08_misclassified_examples.png` | Misclassified image samples |
-| `training_history.csv` | Epoch-level metrics |
-| `logs/app.log` | Persistent application log |
+| Файл | Описание |
+|------|----------|
+| `01_augmentations.png` | Примеры аугментаций тренировочных данных |
+| `02_sample_images.png` | Случайная сетка изображений с метками |
+| `03_training_history.png` | Кривые loss и accuracy/F1 |
+| `04_predictions_grid.png` | Предсказания модели с уверенностью |
+| `05_error_statistics.csv` | Частота ошибок по классам |
+| `06_error_analysis.png` | Диаграммы анализа ошибок |
+| `07_confusion_matrix.png` | Матрица ошибок (топ ошибочных классов) |
+| `08_misclassified_examples.png` | Неверно классифицированные изображения |
+| `training_history.csv` | Метрики по эпохам |
+| `logs/app.log` | Лог приложения |
+
+---
 
 ## License
 
-This project is intended for educational and competition purposes.
+Проект предназначен для учебных и соревновательных целей.
