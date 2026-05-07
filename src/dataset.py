@@ -2,20 +2,20 @@
 dataset.py — torch Dataset и фабрика DataLoader'ов для датасета Симпсонов.
 """
 
-import torch
 import numpy as np
-from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
-from sklearn.utils.class_weight import compute_class_weight
+import torch
 import torchvision.transforms.v2 as v2
 from PIL import Image
+from sklearn.utils.class_weight import compute_class_weight
+from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 
 from config import (
-    DATA_MODES,
     BATCH_SIZE,
-    RESCALE_SIZE,
+    DATA_MODES,
+    MIN_SIZE_UPSAMPLE,
     NORMALIZE_MEAN,
     NORMALIZE_STD,
-    MIN_SIZE_UPSAMPLE,
+    RESCALE_SIZE,
 )
 from src.logger import setup_logger
 
@@ -36,9 +36,7 @@ class SimpsonsDataset(Dataset):
         self.files = sorted(files)
         self.mode = mode
         if self.mode not in DATA_MODES:
-            raise ValueError(
-                f"Invalid mode '{self.mode}'. Expected one of {DATA_MODES}"
-            )
+            raise ValueError(f"Invalid mode '{self.mode}'. Expected one of {DATA_MODES}")
         self.label_encoder = label_encoder
         self.len_ = len(self.files)
 
@@ -94,9 +92,7 @@ def _create_label_to_paths(files, label_encoder) -> dict:
     return dct
 
 
-def _upsample_files(
-    train_files, label_encoder, min_size: int = MIN_SIZE_UPSAMPLE
-) -> list:
+def _upsample_files(train_files, label_encoder, min_size: int = MIN_SIZE_UPSAMPLE) -> list:
     """Дублировать сэмплы миноритарных классов до min_size изображений на класс.
 
     Args:
@@ -149,9 +145,7 @@ def create_dataloaders(
     val_dataset = SimpsonsDataset(val_files, label_encoder, mode="val")
 
     if balanced:
-        train_labels = np.array(
-            [train_dataset[i][1] for i in range(len(train_dataset))]
-        )
+        train_labels = np.array([train_dataset[i][1] for i in range(len(train_dataset))])
         class_weights = compute_class_weight(
             class_weight="balanced",
             classes=np.unique(train_labels),
@@ -167,11 +161,7 @@ def create_dataloaders(
             train_dataset, batch_size=batch_size, sampler=sampler, num_workers=4
         )
     else:
-        train_loader = DataLoader(
-            train_dataset, batch_size=batch_size, shuffle=True, num_workers=4
-        )
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
 
-    val_loader = DataLoader(
-        val_dataset, batch_size=batch_size, shuffle=False, num_workers=4
-    )
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4)
     return {"train": train_loader, "val": val_loader}, train_dataset, val_dataset

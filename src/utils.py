@@ -43,9 +43,7 @@ def load_files(train_dir: Path, test_dir: Path) -> tuple:
                 quiet=False,
             )
         except ImportError:
-            raise RuntimeError(
-                "gdown is required to download the dataset: pip install gdown"
-            )
+            raise RuntimeError("gdown is required to download the dataset: pip install gdown")
         except Exception as e:
             raise RuntimeError(f"Download failed: {e}")
 

@@ -3,17 +3,17 @@ visualization.py — функции для EDA, визуализации обу�
 """
 
 import os
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
 
-import torch
+import matplotlib.patches as patches
+import matplotlib.pyplot as plt
+import mlflow
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import seaborn as sns
+import torch
 from sklearn.metrics import confusion_matrix
-import mlflow
 
 import config
 from src.logger import setup_logger
@@ -93,9 +93,7 @@ def plot_training_history(history, save_path=None):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
 
     if "train_loss" in df.columns:
-        ax1.plot(
-            df.index, df["train_loss"], marker="o", label="Train Loss", linewidth=2
-        )
+        ax1.plot(df.index, df["train_loss"], marker="o", label="Train Loss", linewidth=2)
     if "val_loss" in df.columns:
         ax1.plot(df.index, df["val_loss"], marker="s", label="Val Loss", linewidth=2)
     ax1.set_xlabel("Epoch")
@@ -140,9 +138,7 @@ def plot_training_history(history, save_path=None):
         plt.xlabel("Epoch")
         plt.ylabel("Metric")
         plt.tight_layout()
-        heatmap_path = (
-            str(save_path).replace(".png", "_heatmap.png") if save_path else None
-        )
+        heatmap_path = str(save_path).replace(".png", "_heatmap.png") if save_path else None
         _save_figure(heatmap_path)
 
 
@@ -219,9 +215,7 @@ def analyze_predictions(all_preds, all_labels, all_probs, label_encoder):
                 "total": stats["total"],
                 "correct": stats["correct"],
                 "errors": err_count,
-                "error_rate": (err_count / stats["total"] * 100)
-                if stats["total"] > 0
-                else 0,
+                "error_rate": (err_count / stats["total"] * 100) if stats["total"] > 0 else 0,
             }
         )
     return pd.DataFrame(results).sort_values("error_rate", ascending=False)
@@ -254,9 +248,7 @@ def plot_error_analysis(df_results, save_path=None, top_n=10):
     )
     axes[1].set_title("Samples per Class")
 
-    df_melt = df_results.head(top_n).melt(
-        id_vars="class", value_vars=["correct", "errors"]
-    )
+    df_melt = df_results.head(top_n).melt(id_vars="class", value_vars=["correct", "errors"])
     sns.barplot(x="value", y="class", hue="variable", data=df_melt, ax=axes[2])
     axes[2].set_title("Correct vs Errors")
 
@@ -264,9 +256,7 @@ def plot_error_analysis(df_results, save_path=None, top_n=10):
     _save_figure(save_path)
 
 
-def plot_confusion_matrix(
-    all_preds, all_labels, label_encoder, save_path=None, top_n=12
-):
+def plot_confusion_matrix(all_preds, all_labels, label_encoder, save_path=None, top_n=12):
     """Нормированная матрица ошибок по top_n классам с наибольшим числом ошибок."""
     class_names = [
         label_encoder.inverse_transform([i])[0].split("_")[-1]
@@ -312,9 +302,7 @@ def show_misclassified_examples(
         logger.info("No misclassified examples found")
         return
 
-    plot_indices = np.random.choice(
-        mis_indices, min(len(mis_indices), num_examples), replace=False
-    )
+    plot_indices = np.random.choice(mis_indices, min(len(mis_indices), num_examples), replace=False)
 
     misclassified = []
     for idx in plot_indices:
@@ -323,9 +311,7 @@ def show_misclassified_examples(
         true_name = label_encoder.inverse_transform([label])[0].split("_")[-1]
         pred_name = label_encoder.inverse_transform([pred])[0].split("_")[-1]
         conf = probabilities[idx][pred] * 100
-        misclassified.append(
-            {"img": img, "true": true_name, "pred": pred_name, "conf": conf}
-        )
+        misclassified.append({"img": img, "true": true_name, "pred": pred_name, "conf": conf})
 
     n_cols = 3
     n_rows = (len(misclassified) + n_cols - 1) // n_cols
@@ -377,9 +363,7 @@ def generate_post_training_reports(result, val_dataset, label_encoder, output_di
     all_labels = result["val_targets"]
     all_probs = result["val_probabilities"]
 
-    plot_training_history(
-        history, save_path=os.path.join(output_dir, "03_training_history.png")
-    )
+    plot_training_history(history, save_path=os.path.join(output_dir, "03_training_history.png"))
     show_model_predictions(
         all_preds,
         all_probs,
@@ -391,9 +375,7 @@ def generate_post_training_reports(result, val_dataset, label_encoder, output_di
     df_errors = analyze_predictions(all_preds, all_labels, all_probs, label_encoder)
     df_errors.to_csv(os.path.join(output_dir, "05_error_statistics.csv"), index=False)
 
-    plot_error_analysis(
-        df_errors, save_path=os.path.join(output_dir, "06_error_analysis.png")
-    )
+    plot_error_analysis(df_errors, save_path=os.path.join(output_dir, "06_error_analysis.png"))
     plot_confusion_matrix(
         all_preds,
         all_labels,
@@ -412,9 +394,7 @@ def generate_post_training_reports(result, val_dataset, label_encoder, output_di
     logger.info(f"Post-training reports saved to '{output_dir}'")
 
 
-def log_confusion_matrix(
-    y_true, y_pred, class_names, step, artifact_path="confusion_matrix"
-):
+def log_confusion_matrix(y_true, y_pred, class_names, step, artifact_path="confusion_matrix"):
     """Записать матрицу ошибок как артефакт текущего MLflow run."""
     cm = confusion_matrix(y_true, y_pred)
     plt.figure(figsize=(12, 10))

@@ -1,23 +1,22 @@
-import sys
 import os
+import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pickle
 from pathlib import Path
 
-import torch
 import numpy as np
 import pandas as pd
+import torch
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 import config
 from src.dataset import SimpsonsDataset
-from src.models import build_model
-from src.utils import load_files
 from src.logger import setup_logger
-from src.utils import get_label_encoder
+from src.models import build_model
+from src.utils import get_label_encoder, load_files
 
 logger = setup_logger(__name__)
 
@@ -67,9 +66,7 @@ def main():
         logger.error(f"Checkpoint {checkpoint_path} not found")
         return
 
-    checkpoint = torch.load(
-        checkpoint_path, map_location=config.DEVICE, weights_only=True
-    )
+    checkpoint = torch.load(checkpoint_path, map_location=config.DEVICE, weights_only=True)
     if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
         model.load_state_dict(checkpoint["model_state_dict"])
     else:

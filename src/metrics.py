@@ -2,9 +2,10 @@
 metrics.py — кастомные метрики классификации без sklearn.
 """
 
-import torch
-import pandas as pd
 from collections import defaultdict
+
+import pandas as pd
+import torch
 
 
 def calculate_f1_score(
@@ -48,14 +49,10 @@ def calculate_f1_score(
         weights = targets.bincount(minlength=num_classes).float()
         weights /= weights.sum()
         return (f1_per_class * weights).sum().item()
-    raise ValueError(
-        f"Unsupported average mode: '{average}'. Use 'macro' or 'weighted'."
-    )
+    raise ValueError(f"Unsupported average mode: '{average}'. Use 'macro' or 'weighted'.")
 
 
-def classwise_error_analysis(
-    preds, targets, probs, label_encoder, save_path=None
-) -> pd.DataFrame:
+def classwise_error_analysis(preds, targets, probs, label_encoder, save_path=None) -> pd.DataFrame:
     """Детальный анализ ошибок по классам из кэшированных предсказаний.
 
     Args:
@@ -75,9 +72,7 @@ def classwise_error_analysis(
         error_stats[cls]["total"] += 1
         if true != pred:
             error_stats[cls]["errors"] += 1
-            error_stats[cls]["misclassified_as"].append(
-                label_encoder.inverse_transform([pred])[0]
-            )
+            error_stats[cls]["misclassified_as"].append(label_encoder.inverse_transform([pred])[0])
 
     rows = []
     for cls, stats in error_stats.items():

@@ -21,9 +21,7 @@ def setup_logger(name: str) -> logging.Logger:
         console_handler.setFormatter(formatter)
         logger.addHandler(console_handler)
 
-        file_handler = logging.FileHandler(
-            log_dir / "app.log", mode="a", encoding="utf-8"
-        )
+        file_handler = logging.FileHandler(log_dir / "app.log", mode="a", encoding="utf-8")
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
 

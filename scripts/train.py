@@ -6,23 +6,24 @@ train.py — точка входа для обучения модели.
     python scripts/train.py
 """
 
-import sys
 import os
+import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pickle
+
 import torch
 import torch.optim as optim
 from sklearn.model_selection import train_test_split
 
 import config
-from src.dataset import create_dataloaders, SimpsonsDataset
+from src.dataset import SimpsonsDataset, create_dataloaders
+from src.logger import setup_logger
 from src.models import build_model
 from src.trainer import train_loop
-from src.utils import load_files, get_label_encoder
+from src.utils import get_label_encoder, load_files
 from src.visualization import generate_eda_reports, generate_post_training_reports
-from src.logger import setup_logger
 
 logger = setup_logger(__name__)
 
@@ -85,9 +86,7 @@ def main():
 
     if not config.FREEZE_BACKBONE:
         # ── Классическое обучение: все слои открыты с самого начала ──────────
-        logger.info(
-            f"Classic training (all layers, batch_size={config.FINETUNE_BATCH_SIZE})"
-        )
+        logger.info(f"Classic training (all layers, batch_size={config.FINETUNE_BATCH_SIZE})")
         model.unfreeze_backbone()
         torch.cuda.empty_cache()
 
@@ -106,9 +105,7 @@ def main():
             lr=config.LEARNING_RATE,
             weight_decay=config.WEIGHT_DECAY,
         )
-        scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer, mode="min", patience=3
-        )
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=3)
 
         result = train_loop(
             model=model,
@@ -138,9 +135,7 @@ def main():
         )
 
         # Этап 1: тренируем только голову -----------------------------------
-        logger.info(
-            f"Stage 1: frozen backbone, head only (batch_size={config.BATCH_SIZE})"
-        )
+        logger.info(f"Stage 1: frozen backbone, head only (batch_size={config.BATCH_SIZE})")
         model.freeze_backbone()
 
         optimizer = optim.AdamW(
@@ -148,9 +143,7 @@ def main():
             lr=config.LEARNING_RATE,
             weight_decay=config.WEIGHT_DECAY,
         )
-        scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer, mode="min", patience=3
-        )
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=3)
 
         result = train_loop(
             model=model,
@@ -206,9 +199,7 @@ def main():
 
     # --- Отчёты и чекпоинт ---------------------------------------------------
     logger.info("Generating post-training reports")
-    val_dataset_vis = SimpsonsDataset(
-        val_files, label_encoder=label_encoder, mode="val"
-    )
+    val_dataset_vis = SimpsonsDataset(val_files, label_encoder=label_encoder, mode="val")
     generate_post_training_reports(
         result=result,
         val_dataset=val_dataset_vis,

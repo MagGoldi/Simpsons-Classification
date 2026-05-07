@@ -1,31 +1,31 @@
-import sys
 import os
+import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import argparse
-import pickle
 import json
+import pickle
 from pathlib import Path
 
 import torch
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split
 
 import config
 from src.dataset import SimpsonsDataset
+from src.logger import setup_logger
+from src.metrics import classwise_error_analysis
 from src.models import SimpsonResNet
 from src.trainer import evaluate
-from src.metrics import classwise_error_analysis
-from src.utils import load_files, get_label_encoder
+from src.utils import get_label_encoder, load_files
 from src.visualization import (
+    analyze_predictions,
     plot_confusion_matrix,
     plot_error_analysis,
-    analyze_predictions,
     show_misclassified_examples,
     show_model_predictions,
 )
-from src.logger import setup_logger
 
 logger = setup_logger(__name__)
 
@@ -44,9 +44,7 @@ def load_model(checkpoint_path, n_classes, device):
 def generate_classification_report(targets, preds, label_encoder, save_path):
     """Full sklearn classification report saved as both text and JSON."""
     class_names = list(label_encoder.classes_)
-    report_text = classification_report(
-        targets, preds, target_names=class_names, zero_division=0
-    )
+    report_text = classification_report(targets, preds, target_names=class_names, zero_division=0)
     logger.info(f"Classification Report:\n{report_text}")
 
     report_dict = classification_report(
@@ -90,9 +88,7 @@ def generate_summary(metrics, report_dict, save_path):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Evaluate trained model on validation set"
-    )
+    parser = argparse.ArgumentParser(description="Evaluate trained model on validation set")
     parser.add_argument(
         "--checkpoint",
         type=str,

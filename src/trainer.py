@@ -2,21 +2,20 @@
 trainer.py — цикл обучения с early stopping, LR scheduler и MLflow логированием.
 """
 
-import torch
 import warnings
-import pandas as pd
+
 import mlflow
 import mlflow.pytorch
+import pandas as pd
+import torch
 from tqdm import tqdm
 
 import config
+from src.logger import setup_logger
 from src.metrics import calculate_f1_score
 from src.visualization import log_confusion_matrix
-from src.logger import setup_logger
 
-warnings.filterwarnings(
-    "ignore", message="Found torch version.*contains a local version label"
-)
+warnings.filterwarnings("ignore", message="Found torch version.*contains a local version label")
 warnings.filterwarnings(
     "ignore", message="Saving pytorch model by Pickle.*requires exercising caution"
 )
@@ -25,9 +24,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning, module="mlflow")
 logger = setup_logger(__name__)
 
 
-def train_one_epoch(
-    model, loader, optimizer, loss_func, device, num_classes: int
-) -> dict:
+def train_one_epoch(model, loader, optimizer, loss_func, device, num_classes: int) -> dict:
     """Выполнить одну эпоху обучения.
 
     Returns:
@@ -58,9 +55,7 @@ def train_one_epoch(
         "loss": total_loss / num_batches,
         "accuracy": (all_preds == all_targets).float().mean().item(),
         "f1_macro": calculate_f1_score(all_preds, all_targets, num_classes, "macro"),
-        "f1_weighted": calculate_f1_score(
-            all_preds, all_targets, num_classes, "weighted"
-        ),
+        "f1_weighted": calculate_f1_score(all_preds, all_targets, num_classes, "weighted"),
     }
 
 
@@ -94,9 +89,7 @@ def evaluate(model, loader, loss_func, device, num_classes: int) -> tuple:
         "loss": total_loss / num_batches,
         "accuracy": (all_preds == all_targets).float().mean().item(),
         "f1_macro": calculate_f1_score(all_preds, all_targets, num_classes, "macro"),
-        "f1_weighted": calculate_f1_score(
-            all_preds, all_targets, num_classes, "weighted"
-        ),
+        "f1_weighted": calculate_f1_score(all_preds, all_targets, num_classes, "weighted"),
     }
     return metrics, all_preds.numpy(), all_targets.numpy(), all_probs.numpy()
 
@@ -201,9 +194,7 @@ def train_loop(
                 step=epoch,
             )
 
-            if class_names and (
-                epoch == 0 or (epoch + 1) % 5 == 0 or epoch == max_epochs - 1
-            ):
+            if class_names and (epoch == 0 or (epoch + 1) % 5 == 0 or epoch == max_epochs - 1):
                 log_confusion_matrix(val_targets, val_preds, class_names, step=epoch)
 
             # --- early stopping & best model ----------------------------------
@@ -211,14 +202,10 @@ def train_loop(
             if current_val_f1 - best_val_f1 > min_delta:
                 best_val_f1 = current_val_f1
                 best_epoch = epoch
-                best_model_state = {
-                    k: v.cpu().clone() for k, v in model.state_dict().items()
-                }
+                best_model_state = {k: v.cpu().clone() for k, v in model.state_dict().items()}
                 epochs_no_improve = 0
                 mlflow.pytorch.log_model(model, artifact_path="best_model")
-                logger.info(
-                    f"  ↑ New best at epoch {epoch + 1} | val_f1_macro={best_val_f1:.4f}"
-                )
+                logger.info(f"  ↑ New best at epoch {epoch + 1} | val_f1_macro={best_val_f1:.4f}")
             else:
                 epochs_no_improve += 1
 
