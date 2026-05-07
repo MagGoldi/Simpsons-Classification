@@ -36,13 +36,16 @@ def load_files(train_dir: Path, test_dir: Path) -> tuple:
 
         try:
             import gdown
+
             gdown.download(
                 id="1RxBQiZgRAfio2tWhEE7lzZ6IaJzLheH1",
                 output=zip_filename,
                 quiet=False,
             )
         except ImportError:
-            raise RuntimeError("gdown is required to download the dataset: pip install gdown")
+            raise RuntimeError(
+                "gdown is required to download the dataset: pip install gdown"
+            )
         except Exception as e:
             raise RuntimeError(f"Download failed: {e}")
 
@@ -61,7 +64,7 @@ def load_files(train_dir: Path, test_dir: Path) -> tuple:
         logger.info(f"Data found: '{train_dir}' and '{test_dir}'")
 
     train_val_files = sorted(train_dir.rglob("*.jpg"))
-    test_files      = sorted(test_dir.rglob("*.jpg"))
+    test_files = sorted(test_dir.rglob("*.jpg"))
     return train_val_files, test_files
 
 

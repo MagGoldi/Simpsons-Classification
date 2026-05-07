@@ -16,7 +16,6 @@ from sklearn.metrics import confusion_matrix
 import mlflow
 
 import config
-from src.dataset import SimpsonsDataset
 from src.logger import setup_logger
 
 logger = setup_logger(__name__)
@@ -67,9 +66,11 @@ def show_augmentations(dataset, num_images=5, save_path=None):
 def show_images(dataset, label_encoder, n_rows=3, n_cols=6, save_path=None):
     """Показать случайную сетку изображений из датасета с метками."""
     fig, axes = plt.subplots(
-        nrows=n_rows, ncols=n_cols,
+        nrows=n_rows,
+        ncols=n_cols,
         figsize=(n_cols * 4, n_rows * 4),
-        sharey=True, sharex=True,
+        sharey=True,
+        sharex=True,
     )
     for ax in axes.flatten():
         idx = int(np.random.uniform(0, len(dataset)))
@@ -92,7 +93,9 @@ def plot_training_history(history, save_path=None):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18, 7))
 
     if "train_loss" in df.columns:
-        ax1.plot(df.index, df["train_loss"], marker="o", label="Train Loss", linewidth=2)
+        ax1.plot(
+            df.index, df["train_loss"], marker="o", label="Train Loss", linewidth=2
+        )
     if "val_loss" in df.columns:
         ax1.plot(df.index, df["val_loss"], marker="s", label="Val Loss", linewidth=2)
     ax1.set_xlabel("Epoch")
@@ -105,7 +108,13 @@ def plot_training_history(history, save_path=None):
     if "val_acc" in df.columns:
         ax2.plot(df.index, df["val_acc"], marker="s", label="Val Acc", linewidth=2)
     if "val_f1_macro" in df.columns:
-        ax2.plot(df.index, df["val_f1_macro"], marker="^", label="Val F1 (Macro)", linewidth=2)
+        ax2.plot(
+            df.index,
+            df["val_f1_macro"],
+            marker="^",
+            label="Val F1 (Macro)",
+            linewidth=2,
+        )
     ax2.set_xlabel("Epoch")
     ax2.set_ylabel("Metric Value")
     ax2.set_title("Accuracy & F1", fontsize=14)
@@ -119,25 +128,41 @@ def plot_training_history(history, save_path=None):
         diff_df = diff_df.rename(columns={col: f"Δ{col}" for col in diff_df.columns})
         plt.figure(figsize=(12, 6))
         sns.heatmap(
-            diff_df.T, annot=True, fmt=".2f", cmap="RdBu_r",
-            center=0, linewidths=0.5, cbar_kws={"label": "Delta"},
+            diff_df.T,
+            annot=True,
+            fmt=".2f",
+            cmap="RdBu_r",
+            center=0,
+            linewidths=0.5,
+            cbar_kws={"label": "Delta"},
         )
         plt.title("Per-Epoch Metric Changes", fontsize=14)
         plt.xlabel("Epoch")
         plt.ylabel("Metric")
         plt.tight_layout()
-        heatmap_path = str(save_path).replace(".png", "_heatmap.png") if save_path else None
+        heatmap_path = (
+            str(save_path).replace(".png", "_heatmap.png") if save_path else None
+        )
         _save_figure(heatmap_path)
 
 
 @torch.no_grad()
-def show_model_predictions(predictions, probabilities, dataset, label_encoder,
-                           n_rows=3, n_cols=3, save_path=None):
+def show_model_predictions(
+    predictions,
+    probabilities,
+    dataset,
+    label_encoder,
+    n_rows=3,
+    n_cols=3,
+    save_path=None,
+):
     """Сетка случайных изображений с предсказанными метками и уверенностью модели."""
     fig, axs = plt.subplots(
-        nrows=n_rows, ncols=n_cols,
+        nrows=n_rows,
+        ncols=n_cols,
         figsize=(n_cols * 4, n_rows * 4),
-        sharey=True, sharex=True,
+        sharey=True,
+        sharex=True,
     )
     indices = np.random.choice(len(dataset), n_rows * n_cols, replace=False)
 
@@ -157,7 +182,14 @@ def show_model_predictions(predictions, probabilities, dataset, label_encoder,
 
         color = "green" if pred_idx == label else "red"
         ax.add_patch(patches.Rectangle((0, 190), 224, 34, color="white", alpha=0.7))
-        ax.text(5, 205, f"{pred_label}\n{pred_prob:.1f}%", color=color, weight="bold", fontsize=9)
+        ax.text(
+            5,
+            205,
+            f"{pred_label}\n{pred_prob:.1f}%",
+            color=color,
+            weight="bold",
+            fontsize=9,
+        )
         ax.set_axis_off()
 
     plt.tight_layout()
@@ -181,13 +213,17 @@ def analyze_predictions(all_preds, all_labels, all_probs, label_encoder):
     results = []
     for name, stats in class_stats.items():
         err_count = stats["total"] - stats["correct"]
-        results.append({
-            "class": name,
-            "total": stats["total"],
-            "correct": stats["correct"],
-            "errors": err_count,
-            "error_rate": (err_count / stats["total"] * 100) if stats["total"] > 0 else 0,
-        })
+        results.append(
+            {
+                "class": name,
+                "total": stats["total"],
+                "correct": stats["correct"],
+                "errors": err_count,
+                "error_rate": (err_count / stats["total"] * 100)
+                if stats["total"] > 0
+                else 0,
+            }
+        )
     return pd.DataFrame(results).sort_values("error_rate", ascending=False)
 
 
@@ -196,15 +232,31 @@ def plot_error_analysis(df_results, save_path=None, top_n=10):
     fig, axes = plt.subplots(1, 3, figsize=(18, 6))
 
     top_errors = df_results.nlargest(top_n, "error_rate")
-    sns.barplot(x="error_rate", y="class", data=top_errors, ax=axes[0],
-                hue="class", palette="Reds_r", legend=False)
+    sns.barplot(
+        x="error_rate",
+        y="class",
+        data=top_errors,
+        ax=axes[0],
+        hue="class",
+        palette="Reds_r",
+        legend=False,
+    )
     axes[0].set_title(f"Top {top_n} Class Error Rates (%)")
 
-    sns.barplot(x="total", y="class", data=df_results.head(top_n), ax=axes[1],
-                hue="class", palette="Blues_r", legend=False)
+    sns.barplot(
+        x="total",
+        y="class",
+        data=df_results.head(top_n),
+        ax=axes[1],
+        hue="class",
+        palette="Blues_r",
+        legend=False,
+    )
     axes[1].set_title("Samples per Class")
 
-    df_melt = df_results.head(top_n).melt(id_vars="class", value_vars=["correct", "errors"])
+    df_melt = df_results.head(top_n).melt(
+        id_vars="class", value_vars=["correct", "errors"]
+    )
     sns.barplot(x="value", y="class", hue="variable", data=df_melt, ax=axes[2])
     axes[2].set_title("Correct vs Errors")
 
@@ -212,7 +264,9 @@ def plot_error_analysis(df_results, save_path=None, top_n=10):
     _save_figure(save_path)
 
 
-def plot_confusion_matrix(all_preds, all_labels, label_encoder, save_path=None, top_n=12):
+def plot_confusion_matrix(
+    all_preds, all_labels, label_encoder, save_path=None, top_n=12
+):
     """Нормированная матрица ошибок по top_n классам с наибольшим числом ошибок."""
     class_names = [
         label_encoder.inverse_transform([i])[0].split("_")[-1]
@@ -229,8 +283,12 @@ def plot_confusion_matrix(all_preds, all_labels, label_encoder, save_path=None, 
 
     plt.figure(figsize=(12, 10))
     sns.heatmap(
-        cm_filtered, annot=True, fmt=".2f", cmap="YlOrRd",
-        xticklabels=labels_filtered, yticklabels=labels_filtered,
+        cm_filtered,
+        annot=True,
+        fmt=".2f",
+        cmap="YlOrRd",
+        xticklabels=labels_filtered,
+        yticklabels=labels_filtered,
     )
     plt.title(f"Confusion Matrix (Top {top_n} Error Classes)")
     plt.xlabel("Predicted")
@@ -239,15 +297,24 @@ def plot_confusion_matrix(all_preds, all_labels, label_encoder, save_path=None, 
     _save_figure(save_path)
 
 
-def show_misclassified_examples(predictions, labels, probabilities, dataset,
-                                label_encoder, save_path=None, num_examples=9):
+def show_misclassified_examples(
+    predictions,
+    labels,
+    probabilities,
+    dataset,
+    label_encoder,
+    save_path=None,
+    num_examples=9,
+):
     """Показать случайные неверно классифицированные примеры с подписями."""
     mis_indices = np.where(predictions != labels)[0]
     if len(mis_indices) == 0:
         logger.info("No misclassified examples found")
         return
 
-    plot_indices = np.random.choice(mis_indices, min(len(mis_indices), num_examples), replace=False)
+    plot_indices = np.random.choice(
+        mis_indices, min(len(mis_indices), num_examples), replace=False
+    )
 
     misclassified = []
     for idx in plot_indices:
@@ -256,7 +323,9 @@ def show_misclassified_examples(predictions, labels, probabilities, dataset,
         true_name = label_encoder.inverse_transform([label])[0].split("_")[-1]
         pred_name = label_encoder.inverse_transform([pred])[0].split("_")[-1]
         conf = probabilities[idx][pred] * 100
-        misclassified.append({"img": img, "true": true_name, "pred": pred_name, "conf": conf})
+        misclassified.append(
+            {"img": img, "true": true_name, "pred": pred_name, "conf": conf}
+        )
 
     n_cols = 3
     n_rows = (len(misclassified) + n_cols - 1) // n_cols
@@ -284,10 +353,18 @@ def generate_eda_reports(train_dataset, val_dataset, label_encoder, output_dir=N
     output_dir = output_dir or str(config.REPORTS_DIR)
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
-    show_augmentations(train_dataset, num_images=5,
-                       save_path=os.path.join(output_dir, "01_augmentations.png"))
-    show_images(val_dataset, label_encoder, n_rows=3, n_cols=6,
-                save_path=os.path.join(output_dir, "02_sample_images.png"))
+    show_augmentations(
+        train_dataset,
+        num_images=5,
+        save_path=os.path.join(output_dir, "01_augmentations.png"),
+    )
+    show_images(
+        val_dataset,
+        label_encoder,
+        n_rows=3,
+        n_cols=6,
+        save_path=os.path.join(output_dir, "02_sample_images.png"),
+    )
 
 
 def generate_post_training_reports(result, val_dataset, label_encoder, output_dir=None):
@@ -304,7 +381,10 @@ def generate_post_training_reports(result, val_dataset, label_encoder, output_di
         history, save_path=os.path.join(output_dir, "03_training_history.png")
     )
     show_model_predictions(
-        all_preds, all_probs, val_dataset, label_encoder,
+        all_preds,
+        all_probs,
+        val_dataset,
+        label_encoder,
         save_path=os.path.join(output_dir, "04_predictions_grid.png"),
     )
 
@@ -315,24 +395,36 @@ def generate_post_training_reports(result, val_dataset, label_encoder, output_di
         df_errors, save_path=os.path.join(output_dir, "06_error_analysis.png")
     )
     plot_confusion_matrix(
-        all_preds, all_labels, label_encoder,
+        all_preds,
+        all_labels,
+        label_encoder,
         save_path=os.path.join(output_dir, "07_confusion_matrix.png"),
     )
     show_misclassified_examples(
-        all_preds, all_labels, all_probs, val_dataset, label_encoder,
+        all_preds,
+        all_labels,
+        all_probs,
+        val_dataset,
+        label_encoder,
         save_path=os.path.join(output_dir, "08_misclassified_examples.png"),
     )
 
     logger.info(f"Post-training reports saved to '{output_dir}'")
 
 
-def log_confusion_matrix(y_true, y_pred, class_names, step, artifact_path="confusion_matrix"):
+def log_confusion_matrix(
+    y_true, y_pred, class_names, step, artifact_path="confusion_matrix"
+):
     """Записать матрицу ошибок как артефакт текущего MLflow run."""
     cm = confusion_matrix(y_true, y_pred)
     plt.figure(figsize=(12, 10))
     sns.heatmap(
-        cm, annot=False, fmt="d", cmap="Blues",
-        xticklabels=class_names, yticklabels=class_names,
+        cm,
+        annot=False,
+        fmt="d",
+        cmap="Blues",
+        xticklabels=class_names,
+        yticklabels=class_names,
     )
     plt.title(f"Confusion Matrix (Step {step})")
     plt.ylabel("True")

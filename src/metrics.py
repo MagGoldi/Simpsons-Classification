@@ -38,8 +38,8 @@ def calculate_f1_score(
     fp = confusion.sum(dim=0) - tp
     fn = confusion.sum(dim=1) - tp
 
-    precision    = tp / (tp + fp + 1e-10)
-    recall       = tp / (tp + fn + 1e-10)
+    precision = tp / (tp + fp + 1e-10)
+    recall = tp / (tp + fn + 1e-10)
     f1_per_class = 2 * (precision * recall) / (precision + recall + 1e-10)
 
     if average == "macro":
@@ -48,10 +48,14 @@ def calculate_f1_score(
         weights = targets.bincount(minlength=num_classes).float()
         weights /= weights.sum()
         return (f1_per_class * weights).sum().item()
-    raise ValueError(f"Unsupported average mode: '{average}'. Use 'macro' or 'weighted'.")
+    raise ValueError(
+        f"Unsupported average mode: '{average}'. Use 'macro' or 'weighted'."
+    )
 
 
-def classwise_error_analysis(preds, targets, probs, label_encoder, save_path=None) -> pd.DataFrame:
+def classwise_error_analysis(
+    preds, targets, probs, label_encoder, save_path=None
+) -> pd.DataFrame:
     """Детальный анализ ошибок по классам из кэшированных предсказаний.
 
     Args:
@@ -82,13 +86,15 @@ def classwise_error_analysis(preds, targets, probs, label_encoder, save_path=Non
             if stats["misclassified_as"]
             else None
         )
-        rows.append({
-            "class":               cls,
-            "total":               stats["total"],
-            "error_count":         stats["errors"],
-            "error_rate":          stats["errors"] / max(stats["total"], 1),
-            "most_common_mistake": most_common,
-        })
+        rows.append(
+            {
+                "class": cls,
+                "total": stats["total"],
+                "error_count": stats["errors"],
+                "error_rate": stats["errors"] / max(stats["total"], 1),
+                "most_common_mistake": most_common,
+            }
+        )
 
     df = pd.DataFrame(rows).sort_values("error_rate", ascending=False)
     if save_path:

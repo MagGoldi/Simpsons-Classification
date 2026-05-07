@@ -49,19 +49,27 @@ def main():
     logger.info(f"Label encoder saved → {le_path}")
 
     train_files, val_files = train_test_split(
-        train_val_files, test_size=config.VAL_SIZE, stratify=train_val_labels, random_state=42
+        train_val_files,
+        test_size=config.VAL_SIZE,
+        stratify=train_val_labels,
+        random_state=42,
     )
 
     # Создаём датасеты только для EDA-отчётов; DataLoader'ы для обучения
     # пересоздаются ниже с нужным batch_size в зависимости от стратегии.
     _, eda_train_dataset, eda_val_dataset = create_dataloaders(
-        train_files, val_files, label_encoder,
-        balanced=False, upsample=config.UPSAMPLE,
+        train_files,
+        val_files,
+        label_encoder,
+        balanced=False,
+        upsample=config.UPSAMPLE,
         batch_size=config.BATCH_SIZE,
     )
 
     generate_eda_reports(
-        eda_train_dataset, eda_val_dataset, label_encoder,
+        eda_train_dataset,
+        eda_val_dataset,
+        label_encoder,
         output_dir=str(config.REPORTS_DIR),
     )
 
@@ -85,8 +93,11 @@ def main():
 
         # При открытом backbone нужен меньший batch (больше VRAM на градиенты)
         loaders, train_dataset, val_dataset = create_dataloaders(
-            train_files, val_files, label_encoder,
-            balanced=False, upsample=config.UPSAMPLE,
+            train_files,
+            val_files,
+            label_encoder,
+            balanced=False,
+            upsample=config.UPSAMPLE,
             batch_size=config.FINETUNE_BATCH_SIZE,
         )
 
@@ -95,7 +106,9 @@ def main():
             lr=config.LEARNING_RATE,
             weight_decay=config.WEIGHT_DECAY,
         )
-        scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=3)
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer, mode="min", patience=3
+        )
 
         result = train_loop(
             model=model,
@@ -116,8 +129,11 @@ def main():
 
         torch.cuda.empty_cache()
         loaders, train_dataset, val_dataset = create_dataloaders(
-            train_files, val_files, label_encoder,
-            balanced=False, upsample=config.UPSAMPLE,
+            train_files,
+            val_files,
+            label_encoder,
+            balanced=False,
+            upsample=config.UPSAMPLE,
             batch_size=config.BATCH_SIZE,
         )
 
@@ -132,7 +148,9 @@ def main():
             lr=config.LEARNING_RATE,
             weight_decay=config.WEIGHT_DECAY,
         )
-        scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=3)
+        scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer, mode="min", patience=3
+        )
 
         result = train_loop(
             model=model,
@@ -156,8 +174,11 @@ def main():
             torch.cuda.empty_cache()
 
             ft_loaders, _, _ = create_dataloaders(
-                train_files, val_files, label_encoder,
-                balanced=False, upsample=config.UPSAMPLE,
+                train_files,
+                val_files,
+                label_encoder,
+                balanced=False,
+                upsample=config.UPSAMPLE,
                 batch_size=config.FINETUNE_BATCH_SIZE,
             )
 
@@ -166,7 +187,9 @@ def main():
                 lr=config.FINETUNE_LR,
                 weight_decay=config.WEIGHT_DECAY,
             )
-            scheduler_ft = optim.lr_scheduler.ReduceLROnPlateau(optimizer_ft, mode="min", patience=3)
+            scheduler_ft = optim.lr_scheduler.ReduceLROnPlateau(
+                optimizer_ft, mode="min", patience=3
+            )
 
             result = train_loop(
                 model=model,
@@ -183,7 +206,9 @@ def main():
 
     # --- Отчёты и чекпоинт ---------------------------------------------------
     logger.info("Generating post-training reports")
-    val_dataset_vis = SimpsonsDataset(val_files, label_encoder=label_encoder, mode="val")
+    val_dataset_vis = SimpsonsDataset(
+        val_files, label_encoder=label_encoder, mode="val"
+    )
     generate_post_training_reports(
         result=result,
         val_dataset=val_dataset_vis,

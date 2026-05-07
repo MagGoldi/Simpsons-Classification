@@ -67,7 +67,9 @@ def main():
         logger.error(f"Checkpoint {checkpoint_path} not found")
         return
 
-    checkpoint = torch.load(checkpoint_path, map_location=config.DEVICE, weights_only=True)
+    checkpoint = torch.load(
+        checkpoint_path, map_location=config.DEVICE, weights_only=True
+    )
     if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
         model.load_state_dict(checkpoint["model_state_dict"])
     else:

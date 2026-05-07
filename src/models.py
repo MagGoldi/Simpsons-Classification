@@ -62,21 +62,25 @@ class SimpsonResNet(nn.Module):
     """
 
     _VARIANTS = {
-        "resnet18":  models.resnet18,
-        "resnet34":  models.resnet34,
-        "resnet50":  models.resnet50,
+        "resnet18": models.resnet18,
+        "resnet34": models.resnet34,
+        "resnet50": models.resnet50,
         "resnet101": models.resnet101,
         "resnet152": models.resnet152,
     }
 
-    def __init__(self, n_classes: int = 42, model_name: str = "resnet50", pretrained: bool = True):
+    def __init__(
+        self, n_classes: int = 42, model_name: str = "resnet50", pretrained: bool = True
+    ):
         super().__init__()
         if model_name not in self._VARIANTS:
             raise ValueError(
                 f"Unsupported ResNet variant: '{model_name}'. "
                 f"Choose from: {list(self._VARIANTS)}"
             )
-        self.backbone = self._VARIANTS[model_name](weights="DEFAULT" if pretrained else None)
+        self.backbone = self._VARIANTS[model_name](
+            weights="DEFAULT" if pretrained else None
+        )
         self.backbone.fc = nn.Linear(self.backbone.fc.in_features, n_classes)
 
     def forward(self, x):
@@ -158,9 +162,13 @@ def build_model(model_name: str, n_classes: int, pretrained: bool = True) -> nn.
     if model_name == "simple_cnn":
         return SimpleCnn(n_classes=n_classes)
     if model_name in _RESNET_VARIANTS:
-        return SimpsonResNet(n_classes=n_classes, model_name=model_name, pretrained=pretrained)
+        return SimpsonResNet(
+            n_classes=n_classes, model_name=model_name, pretrained=pretrained
+        )
     if model_name.startswith("efficientnet-"):
-        return SimpsonEfficientNet(n_classes=n_classes, model_name=model_name, pretrained=pretrained)
+        return SimpsonEfficientNet(
+            n_classes=n_classes, model_name=model_name, pretrained=pretrained
+        )
     raise ValueError(
         f"Unknown model '{model_name}'. "
         f"Supported: simple_cnn, {sorted(_RESNET_VARIANTS)}, efficientnet-b0 … efficientnet-b7"

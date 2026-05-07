@@ -162,26 +162,6 @@ uv run mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5001 --host 0.0.
 
 ---
 
-## Tech Stack
-
-| Library              | Version   |
-|----------------------|-----------|
-| Python               | 3.12+     |
-| PyTorch              | ≥ 2.11.0  |
-| torchvision          | ≥ 0.26.0  |
-| efficientnet-pytorch | 0.7.1     |
-| MLflow               | ≥ 3.11.0  |
-| scikit-learn         | ≥ 1.8.0   |
-| matplotlib           | ≥ 3.10.0  |
-| seaborn              | ≥ 0.13.0  |
-| pandas               | ≥ 2.3.0   |
-| NumPy                | ≥ 2.4.0   |
-| Pillow               | ≥ 12.1.0  |
-| tqdm                 | ≥ 4.67.0  |
-| gdown                | ≥ 5.2.0   |
-
----
-
 ## Reports
 
 Все артефакты сохраняются в `reports/` автоматически:

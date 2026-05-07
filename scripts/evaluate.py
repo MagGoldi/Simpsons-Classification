@@ -9,14 +9,12 @@ import json
 from pathlib import Path
 
 import torch
-import numpy as np
-import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
 import config
-from src.dataset import SimpsonsDataset, create_dataloaders
-from src.models import SimpleCnn, SimpsonResNet
+from src.dataset import SimpsonsDataset
+from src.models import SimpsonResNet
 from src.trainer import evaluate
 from src.metrics import classwise_error_analysis
 from src.utils import load_files, get_label_encoder
@@ -92,7 +90,9 @@ def generate_summary(metrics, report_dict, save_path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Evaluate trained model on validation set")
+    parser = argparse.ArgumentParser(
+        description="Evaluate trained model on validation set"
+    )
     parser.add_argument(
         "--checkpoint",
         type=str,
@@ -160,12 +160,15 @@ def main():
     )
 
     report_dict = generate_classification_report(
-        targets, preds, label_encoder,
+        targets,
+        preds,
+        label_encoder,
         save_path=output_dir / "eval_classification_report",
     )
 
     generate_summary(
-        metrics, report_dict,
+        metrics,
+        report_dict,
         save_path=output_dir / "eval_summary.json",
     )
 
@@ -173,12 +176,17 @@ def main():
     df_errors.to_csv(output_dir / "eval_error_statistics.csv", index=False)
 
     classwise_error_analysis(
-        preds, targets, probs, label_encoder,
+        preds,
+        targets,
+        probs,
+        label_encoder,
         save_path=str(output_dir / "eval_classwise_errors.csv"),
     )
 
     plot_confusion_matrix(
-        preds, targets, label_encoder,
+        preds,
+        targets,
+        label_encoder,
         save_path=str(output_dir / "eval_confusion_matrix.png"),
     )
 
@@ -188,12 +196,19 @@ def main():
     )
 
     show_model_predictions(
-        preds, probs, val_dataset, label_encoder,
+        preds,
+        probs,
+        val_dataset,
+        label_encoder,
         save_path=str(output_dir / "eval_predictions_grid.png"),
     )
 
     show_misclassified_examples(
-        preds, targets, probs, val_dataset, label_encoder,
+        preds,
+        targets,
+        probs,
+        val_dataset,
+        label_encoder,
         save_path=str(output_dir / "eval_misclassified.png"),
     )
 

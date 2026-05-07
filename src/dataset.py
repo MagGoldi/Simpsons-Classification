@@ -9,7 +9,14 @@ from sklearn.utils.class_weight import compute_class_weight
 import torchvision.transforms.v2 as v2
 from PIL import Image
 
-from config import DATA_MODES, BATCH_SIZE, RESCALE_SIZE, NORMALIZE_MEAN, NORMALIZE_STD, MIN_SIZE_UPSAMPLE
+from config import (
+    DATA_MODES,
+    BATCH_SIZE,
+    RESCALE_SIZE,
+    NORMALIZE_MEAN,
+    NORMALIZE_STD,
+    MIN_SIZE_UPSAMPLE,
+)
 from src.logger import setup_logger
 
 logger = setup_logger(__name__)
@@ -29,7 +36,9 @@ class SimpsonsDataset(Dataset):
         self.files = sorted(files)
         self.mode = mode
         if self.mode not in DATA_MODES:
-            raise ValueError(f"Invalid mode '{self.mode}'. Expected one of {DATA_MODES}")
+            raise ValueError(
+                f"Invalid mode '{self.mode}'. Expected one of {DATA_MODES}"
+            )
         self.label_encoder = label_encoder
         self.len_ = len(self.files)
 
@@ -53,22 +62,26 @@ class SimpsonsDataset(Dataset):
     def _apply_transforms(self, image) -> torch.Tensor:
         """Применить аугментации (train) или только resize+normalize (val/test)."""
         if self.mode == "train":
-            transform = v2.Compose([
-                v2.ToImage(),
-                v2.Resize(RESCALE_SIZE),
-                v2.RandomHorizontalFlip(p=0.5),
-                v2.RandomRotation(degrees=45),
-                v2.RandomAffine(degrees=0, translate=(0.1, 0.1)),
-                v2.ToDtype(torch.float32, scale=True),
-                v2.Normalize(NORMALIZE_MEAN, NORMALIZE_STD),
-            ])
+            transform = v2.Compose(
+                [
+                    v2.ToImage(),
+                    v2.Resize(RESCALE_SIZE),
+                    v2.RandomHorizontalFlip(p=0.5),
+                    v2.RandomRotation(degrees=45),
+                    v2.RandomAffine(degrees=0, translate=(0.1, 0.1)),
+                    v2.ToDtype(torch.float32, scale=True),
+                    v2.Normalize(NORMALIZE_MEAN, NORMALIZE_STD),
+                ]
+            )
         else:
-            transform = v2.Compose([
-                v2.ToImage(),
-                v2.Resize(RESCALE_SIZE),
-                v2.ToDtype(torch.float32, scale=True),
-                v2.Normalize(NORMALIZE_MEAN, NORMALIZE_STD),
-            ])
+            transform = v2.Compose(
+                [
+                    v2.ToImage(),
+                    v2.Resize(RESCALE_SIZE),
+                    v2.ToDtype(torch.float32, scale=True),
+                    v2.Normalize(NORMALIZE_MEAN, NORMALIZE_STD),
+                ]
+            )
         return transform(image)
 
 
@@ -81,7 +94,9 @@ def _create_label_to_paths(files, label_encoder) -> dict:
     return dct
 
 
-def _upsample_files(train_files, label_encoder, min_size: int = MIN_SIZE_UPSAMPLE) -> list:
+def _upsample_files(
+    train_files, label_encoder, min_size: int = MIN_SIZE_UPSAMPLE
+) -> list:
     """Дублировать сэмплы миноритарных классов до min_size изображений на класс.
 
     Args:
@@ -131,10 +146,12 @@ def create_dataloaders(
         logger.info(f"Upsampling done: {len(train_files)} total train samples")
 
     train_dataset = SimpsonsDataset(train_files, label_encoder, mode="train")
-    val_dataset   = SimpsonsDataset(val_files,   label_encoder, mode="val")
+    val_dataset = SimpsonsDataset(val_files, label_encoder, mode="val")
 
     if balanced:
-        train_labels = np.array([train_dataset[i][1] for i in range(len(train_dataset))])
+        train_labels = np.array(
+            [train_dataset[i][1] for i in range(len(train_dataset))]
+        )
         class_weights = compute_class_weight(
             class_weight="balanced",
             classes=np.unique(train_labels),
@@ -150,7 +167,11 @@ def create_dataloaders(
             train_dataset, batch_size=batch_size, sampler=sampler, num_workers=4
         )
     else:
-        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
+        train_loader = DataLoader(
+            train_dataset, batch_size=batch_size, shuffle=True, num_workers=4
+        )
 
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4)
+    val_loader = DataLoader(
+        val_dataset, batch_size=batch_size, shuffle=False, num_workers=4
+    )
     return {"train": train_loader, "val": val_loader}, train_dataset, val_dataset
